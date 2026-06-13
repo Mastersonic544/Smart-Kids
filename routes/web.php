@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\ParentController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\SubscriptionController as AdminSubscriptionController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Auth\PasscodeLoginController;
 use App\Http\Controllers\DashboardRedirectController;
@@ -78,6 +79,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('classrooms', ClassroomController::class);
     Route::resource('payments', PaymentController::class)->except(['create', 'store', 'show', 'destroy']);
     Route::resource('enrollments', EnrollmentController::class)->except(['create', 'store', 'show', 'destroy']);
+    Route::get('/subscription', [AdminSubscriptionController::class, 'show'])->name('subscription.show');
+    Route::post('/subscription/pay', [AdminSubscriptionController::class, 'pay'])->name('subscription.pay');
 });
 
 // ===== EDUCATOR ROUTES =====

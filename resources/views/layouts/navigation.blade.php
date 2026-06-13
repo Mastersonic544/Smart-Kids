@@ -44,6 +44,9 @@
                         <x-nav-link :href="route('admin.meals.index')" :active="request()->routeIs('admin.meals.*')">
                             Repas
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.subscription.show')" :active="request()->routeIs('admin.subscription.*')">
+                            Abonnement
+                        </x-nav-link>
                     @endrole
 
                     {{-- Role: Educator --}}
@@ -151,6 +154,7 @@
                 <x-responsive-nav-link :href="route('admin.teachers.index')" :active="request()->routeIs('admin.teachers.*')">Enseignants</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.activities.index')" :active="request()->routeIs('admin.activities.*')">Activités</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.meals.index')" :active="request()->routeIs('admin.meals.*')">Repas</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.subscription.show')" :active="request()->routeIs('admin.subscription.*')">Abonnement</x-responsive-nav-link>
             @endrole
             @role('educateur')
                 <x-responsive-nav-link :href="route('educateur.dashboard')" :active="request()->routeIs('educateur.dashboard')">Tableau de bord</x-responsive-nav-link>
