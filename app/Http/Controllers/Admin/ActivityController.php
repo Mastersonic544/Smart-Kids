@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Activities\EnrollChildActivityRequest;
 use App\Http\Requests\Activities\StoreActivityRequest;
 use App\Http\Requests\Activities\UpdateActivityRequest;
-use App\Services\Activities\ActivityService;
-use App\Models\Teacher;
 use App\Models\Child;
+use App\Models\Teacher;
+use App\Services\Activities\ActivityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -73,10 +74,10 @@ class ActivityController extends Controller
         return redirect()->route('admin.activities.index')->with('success', 'Activité supprimée.');
     }
 
-    public function enrollChild(Request $request, int $activityId): RedirectResponse
+    public function enrollChild(EnrollChildActivityRequest $request, int $activityId): RedirectResponse
     {
-        $request->validate(['child_id' => 'required|exists:children,id']);
-        $this->activityService->enrollChild($activityId, $request->child_id);
+        $this->activityService->enrollChild($activityId, $request->validated()['child_id']);
+
         return redirect()->route('admin.activities.show', $activityId)->with('success', 'Enfant inscrit avec succès.');
     }
 

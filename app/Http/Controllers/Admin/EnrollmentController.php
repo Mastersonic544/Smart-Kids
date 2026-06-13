@@ -3,33 +3,29 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Enrollments\UpdateEnrollmentRequest;
 use App\Models\Enrollment;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
-/**
- * Controller for managing Enrollments from Admin portal.
- */
 class EnrollmentController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $enrollments = Enrollment::with('child')->orderBy('created_at', 'desc')->paginate(20);
+        $enrollments = Enrollment::with('child')->orderByDesc('created_at')->paginate(20);
+
         return view('admin.enrollments.index', compact('enrollments'));
     }
 
-    public function edit(Enrollment $enrollment)
+    public function edit(Enrollment $enrollment): View
     {
         return view('admin.enrollments.edit', compact('enrollment'));
     }
 
-    public function update(Request $request, Enrollment $enrollment)
+    public function update(UpdateEnrollmentRequest $request, Enrollment $enrollment): RedirectResponse
     {
-        $validated = $request->validate([
-            'statut' => 'required|in:en attente,approuvé,rejeté',
-            'notes' => 'nullable|string'
-        ]);
+        $enrollment->update($request->validated());
 
-        $enrollment->update($validated);
         return redirect()->route('admin.enrollments.index')->with('success', 'Inscription mise à jour.');
     }
 }

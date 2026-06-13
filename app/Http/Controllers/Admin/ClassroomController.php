@@ -3,62 +3,54 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Classrooms\StoreClassroomRequest;
+use App\Http\Requests\Classrooms\UpdateClassroomRequest;
 use App\Models\Classroom;
 use App\Models\Teacher;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
-/**
- * Controller for managing Classrooms from Admin portal.
- */
 class ClassroomController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $classrooms = Classroom::withCount('children')->with('teacher')->get();
+
         return view('admin.classrooms.index', compact('classrooms'));
     }
 
-    public function create()
+    public function create(): View
     {
         $teachers = Teacher::all();
+
         return view('admin.classrooms.create', compact('teachers'));
     }
 
-    public function store(Request $request)
+    public function store(StoreClassroomRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'nom' => 'required|string|max:255',
-            'niveau' => 'required|string|max:255',
-            'capacite' => 'required|integer|min:1',
-            'educator_id' => 'nullable|exists:teachers,id',
-        ]);
+        Classroom::create($request->validated());
 
-        Classroom::create($validated);
         return redirect()->route('admin.classrooms.index')->with('success', 'Classe créée avec succès.');
     }
 
-    public function edit(Classroom $classroom)
+    public function edit(Classroom $classroom): View
     {
         $teachers = Teacher::all();
+
         return view('admin.classrooms.edit', compact('classroom', 'teachers'));
     }
 
-    public function update(Request $request, Classroom $classroom)
+    public function update(UpdateClassroomRequest $request, Classroom $classroom): RedirectResponse
     {
-        $validated = $request->validate([
-            'nom' => 'required|string|max:255',
-            'niveau' => 'required|string|max:255',
-            'capacite' => 'required|integer|min:1',
-            'educator_id' => 'nullable|exists:teachers,id',
-        ]);
+        $classroom->update($request->validated());
 
-        $classroom->update($validated);
         return redirect()->route('admin.classrooms.index')->with('success', 'Classe mise à jour.');
     }
 
-    public function destroy(Classroom $classroom)
+    public function destroy(Classroom $classroom): RedirectResponse
     {
         $classroom->delete();
+
         return redirect()->route('admin.classrooms.index')->with('success', 'Classe supprimée.');
     }
 }

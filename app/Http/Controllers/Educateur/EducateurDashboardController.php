@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Educateur;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Attendances\StoreAttendanceRequest;
 use App\Services\Educateur\EducateurDashboardService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -65,18 +67,13 @@ class EducateurDashboardController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeAttendance(Request $request)
+    public function storeAttendance(StoreAttendanceRequest $request): RedirectResponse
     {
-        $request->validate([
-            'date' => 'required|date',
-            'attendance' => 'required|array',
-            'attendance.*.child_id' => 'required|exists:children,id',
-            'attendance.*.statut' => 'required|in:present,absent,en_retard',
-        ]);
+        $data = $request->validated();
 
-        $this->educateurService->saveAttendance($request->date, $request->attendance);
+        $this->educateurService->saveAttendance($data['date'], $data['attendance']);
 
-        return redirect()->route('educateur.attendance', ['date' => $request->date])
+        return redirect()->route('educateur.attendance', ['date' => $data['date']])
             ->with('success', 'Présences enregistrées avec succès !');
     }
 

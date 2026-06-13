@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Messages\MessageService;
+use App\Http\Requests\Messages\SendMessageRequest;
 use App\Models\User;
+use App\Services\Messages\MessageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -83,20 +84,16 @@ class MessageController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function send(Request $request)
+    public function send(SendMessageRequest $request)
     {
-        $request->validate([
-            'receiver_id' => 'required|exists:users,id',
-            'body' => 'required|string|max:5000',
-        ]);
+        $data = $request->validated();
 
         $message = $this->messageService->sendMessage(
             Auth::id(),
-            $request->receiver_id,
-            $request->body
+            $data['receiver_id'],
+            $data['body']
         );
 
-        // Support AJAX requests
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
@@ -104,7 +101,7 @@ class MessageController extends Controller
             ]);
         }
 
-        return redirect()->route('messages.conversation', $request->receiver_id);
+        return redirect()->route('messages.conversation', $data['receiver_id']);
     }
 
     /**
