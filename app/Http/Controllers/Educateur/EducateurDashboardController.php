@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Educateur;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Activities\RequestActivityRequest;
 use App\Http\Requests\Attendances\StoreAttendanceRequest;
+use App\Services\Activities\ActivityService;
 use App\Services\Educateur\EducateurDashboardService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,12 +18,12 @@ class EducateurDashboardController extends Controller
 {
     protected EducateurDashboardService $educateurService;
 
-    /**
-     * Inject EducateurDashboardService.
-     */
-    public function __construct(EducateurDashboardService $educateurService)
+    protected ActivityService $activityService;
+
+    public function __construct(EducateurDashboardService $educateurService, ActivityService $activityService)
     {
         $this->educateurService = $educateurService;
+        $this->activityService = $activityService;
     }
 
     /**
@@ -78,5 +80,19 @@ class EducateurDashboardController extends Controller
         $data = $this->educateurService->getEducatorActivities(auth()->user());
 
         return view('educateur.activities.index', $data);
+    }
+
+    public function requestActivityForm(): View
+    {
+        return view('educateur.activities.request');
+    }
+
+    public function submitActivityRequest(RequestActivityRequest $request): RedirectResponse
+    {
+        $this->activityService->requestActivity(auth()->user(), $request->validated());
+
+        return redirect()
+            ->route('educateur.activities')
+            ->with('success', 'Demande d\'activité envoyée à l\'administration pour approbation.');
     }
 }

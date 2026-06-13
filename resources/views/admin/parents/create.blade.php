@@ -44,7 +44,7 @@
                         </div>
 
                         <div class="mb-6 rounded-lg bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 px-4 py-3 text-sm text-teal-800 dark:text-teal-200">
-                            Aucun mot de passe à choisir : un <strong>code à 6 chiffres</strong> sera généré automatiquement et affiché ici. Communiquez-le au parent pour qu'il puisse accéder à son espace via <code>/parents/login</code>.
+                            Aucun mot de passe à choisir : un <strong>code à 6 chiffres</strong> sera généré automatiquement et affiché ici. Communiquez-le au parent pour qu'il puisse accéder à son espace via <code>/login/code</code>.
                         </div>
 
                         <div class="flex justify-end gap-4">

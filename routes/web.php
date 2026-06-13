@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\ParentController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\TeacherController;
-use App\Http\Controllers\Auth\ParentPasscodeLoginController;
+use App\Http\Controllers\Auth\PasscodeLoginController;
 use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\Educateur\EducateurDashboardController;
 use App\Http\Controllers\MessageController;
@@ -26,10 +26,10 @@ Route::get('/dashboard', DashboardRedirectController::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-// Parent passcode auth (admin-issued 6-digit code, no email needed)
+// Passcode auth for parents and educators (admin-issued 6-digit code, no email)
 Route::middleware('guest')->group(function () {
-    Route::get('/parents/login', [ParentPasscodeLoginController::class, 'show'])->name('parent.passcode.show');
-    Route::post('/parents/login', [ParentPasscodeLoginController::class, 'store'])->name('parent.passcode.attempt');
+    Route::get('/login/code', [PasscodeLoginController::class, 'show'])->name('passcode.show');
+    Route::post('/login/code', [PasscodeLoginController::class, 'store'])->name('passcode.attempt');
 });
 
 Route::middleware('auth')->group(function () {
@@ -59,9 +59,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('parents/{parent}/regenerate-passcode', [ParentController::class, 'regeneratePasscode'])
         ->name('parents.regeneratePasscode');
     Route::resource('teachers', TeacherController::class)->except(['show']);
+    Route::post('teachers/{teacher}/regenerate-passcode', [TeacherController::class, 'regeneratePasscode'])
+        ->name('teachers.regeneratePasscode');
     Route::resource('activities', ActivityController::class);
     Route::post('activities/{activity}/enroll', [ActivityController::class, 'enrollChild'])->name('activities.enroll');
     Route::post('activities/{activity}/attendance', [ActivityController::class, 'markAttendance'])->name('activities.attendance');
+    Route::post('activities/{activity}/approve', [ActivityController::class, 'approve'])->name('activities.approve');
+    Route::post('activities/{activity}/reject', [ActivityController::class, 'reject'])->name('activities.reject');
     Route::resource('meals', MealController::class)->except(['edit', 'update', 'destroy']);
     Route::resource('classrooms', ClassroomController::class);
     Route::resource('payments', PaymentController::class)->except(['create', 'store', 'show', 'destroy']);
@@ -75,6 +79,8 @@ Route::middleware(['auth', 'role:educateur'])->prefix('educateur')->name('educat
     Route::get('/attendance', [EducateurDashboardController::class, 'attendance'])->name('attendance');
     Route::post('/attendance', [EducateurDashboardController::class, 'storeAttendance'])->name('attendance.store');
     Route::get('/activities', [EducateurDashboardController::class, 'activities'])->name('activities');
+    Route::get('/activities/request', [EducateurDashboardController::class, 'requestActivityForm'])->name('activities.requestForm');
+    Route::post('/activities/request', [EducateurDashboardController::class, 'submitActivityRequest'])->name('activities.requestSubmit');
 });
 
 // ===== PARENT ROUTES =====

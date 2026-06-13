@@ -11,18 +11,17 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 /**
- * Lightweight passcode auth for parents.
+ * Six-digit passcode auth for parents AND educators.
  *
- * Parents do NOT pick their own password; the admin mints a 6-digit
- * memorable passcode at creation time. They sign in here with that
- * passcode (no email needed — the passcode is the credential, scoped
- * unique across users).
+ * Admins do NOT log in here — admin accounts are provisioned by the SuperAdmin
+ * and authenticate via Supabase. The passcode is the sole credential, scoped
+ * unique across all users; the role determines which dashboard the user lands on.
  */
-class ParentPasscodeLoginController extends Controller
+class PasscodeLoginController extends Controller
 {
     public function show(): View
     {
-        return view('auth.parent-passcode-login');
+        return view('auth.passcode-login');
     }
 
     public function store(Request $request): RedirectResponse
@@ -31,19 +30,20 @@ class ParentPasscodeLoginController extends Controller
             'passcode' => ['required', 'string', 'digits:6'],
         ]);
 
-        $parent = User::role('parent')
+        $user = User::query()
             ->where('passcode', $data['passcode'])
+            ->whereHas('roles', fn ($q) => $q->whereIn('name', ['parent', 'educateur']))
             ->first();
 
-        if (! $parent) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'passcode' => 'Code invalide. Vérifiez les 6 chiffres avec votre établissement.',
             ]);
         }
 
-        Auth::login($parent, remember: true);
+        Auth::login($user, remember: true);
         $request->session()->regenerate();
 
-        return redirect()->intended(route('parent.dashboard'));
+        return redirect()->intended(route('dashboard'));
     }
 }

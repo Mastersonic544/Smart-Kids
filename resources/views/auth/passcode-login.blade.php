@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="space-y-4">
         <div class="text-center space-y-1">
-            <h1 class="text-2xl font-bold text-slate-800 dark:text-white">Espace Parent</h1>
+            <h1 class="text-2xl font-bold text-slate-800 dark:text-white">Espace Parent / Éducateur</h1>
             <p class="text-sm text-slate-500 dark:text-slate-400">
                 Entrez le code à 6 chiffres remis par l'établissement.
             </p>
@@ -13,7 +13,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('parent.passcode.attempt') }}" class="space-y-4">
+        <form method="POST" action="{{ route('passcode.attempt') }}" class="space-y-4">
             @csrf
 
             <div>
@@ -41,8 +41,8 @@
         </form>
 
         <div class="text-center text-sm text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-700">
-            Personnel administratif ou éducatif ?
-            <a href="{{ route('login') }}" class="text-teal-600 font-semibold hover:underline">Connexion avec email</a>
+            Administrateur de l'établissement ?
+            <a href="{{ route('login') }}" class="text-teal-600 font-semibold hover:underline">Connexion email</a>
         </div>
     </div>
 </x-guest-layout>

@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activities\EnrollChildActivityRequest;
 use App\Http\Requests\Activities\StoreActivityRequest;
 use App\Http\Requests\Activities\UpdateActivityRequest;
+use App\Models\Activity;
 use App\Models\Child;
 use App\Models\Teacher;
 use App\Services\Activities\ActivityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class ActivityController extends Controller
@@ -97,5 +99,23 @@ class ActivityController extends Controller
         $this->activityService->markAttendance($activityId, $childIds);
 
         return redirect()->route('admin.activities.show', $activityId)->with('success', 'Présences mises à jour.');
+    }
+
+    public function approve(Activity $activity): RedirectResponse
+    {
+        $this->activityService->approveActivity($activity, Auth::user());
+
+        return redirect()->route('admin.activities.index')->with('success', 'Activité approuvée et parents notifiés.');
+    }
+
+    public function reject(Request $request, Activity $activity): RedirectResponse
+    {
+        $data = $request->validate([
+            'rejection_reason' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $this->activityService->rejectActivity($activity, Auth::user(), $data['rejection_reason'] ?? null);
+
+        return redirect()->route('admin.activities.index')->with('success', 'Activité refusée.');
     }
 }
