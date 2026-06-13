@@ -36,12 +36,28 @@ class RoleSeeder extends Seeder
             ]
         );
 
+        // Create SuperAdmin user (SaaS owner)
+        $superadmin = User::firstOrCreate(
+            ['email' => 'superadmin@smartkids.tn'],
+            [
+                'name' => 'SmartKids SaaS Owner',
+                'password' => Hash::make('password'),
+            ]
+        );
+        if (! $superadmin->hasRole('superadmin')) {
+            $superadmin->assignRole('superadmin');
+        }
+
         // Create Admin user
         $admin = User::firstOrCreate(
             ['email' => 'admin@smartkids.tn'],
             [
                 'name' => 'Admin User',
                 'password' => Hash::make('password'),
+                'subscription_status' => 'active',
+                'billing_period' => 'monthly',
+                'subscription_started_at' => now(),
+                'subscription_due_at' => now()->addMonth(),
             ]
         );
         if (! $admin->hasRole('admin')) {

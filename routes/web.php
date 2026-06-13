@@ -16,6 +16,8 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Parent\ParentDashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Superadmin\SuperadminAdminController;
+use App\Http\Controllers\Superadmin\SuperadminDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -49,6 +51,12 @@ Route::middleware('auth')->group(function () {
     // Notifications
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+});
+
+// ===== SUPERADMIN ROUTES =====
+Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+    Route::get('/dashboard', [SuperadminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('admins', SuperadminAdminController::class)->only(['index', 'create', 'store', 'destroy']);
 });
 
 // ===== ADMIN ROUTES =====

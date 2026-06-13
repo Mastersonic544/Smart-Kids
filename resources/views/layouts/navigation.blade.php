@@ -17,6 +17,12 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden sm:flex sm:items-center sm:space-x-1">
+                    {{-- Role: SuperAdmin --}}
+                    @role('superadmin')
+                        <x-nav-link :href="route('superadmin.dashboard')" :active="request()->routeIs('superadmin.dashboard')">Dashboard SaaS</x-nav-link>
+                        <x-nav-link :href="route('superadmin.admins.index')" :active="request()->routeIs('superadmin.admins.*')">Kindergartens</x-nav-link>
+                    @endrole
+
                     {{-- Role: Admin --}}
                     @role('admin')
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
@@ -134,6 +140,10 @@
     <!-- Responsive Navigation Menu (Mobile) -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden border-t border-slate-200 dark:border-slate-700">
         <div class="pt-2 pb-3 space-y-1 px-4">
+            @role('superadmin')
+                <x-responsive-nav-link :href="route('superadmin.dashboard')" :active="request()->routeIs('superadmin.dashboard')">Dashboard SaaS</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('superadmin.admins.index')" :active="request()->routeIs('superadmin.admins.*')">Kindergartens</x-responsive-nav-link>
+            @endrole
             @role('admin')
                 <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">Tableau de bord</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.children.index')" :active="request()->routeIs('admin.children.*')">Enfants</x-responsive-nav-link>

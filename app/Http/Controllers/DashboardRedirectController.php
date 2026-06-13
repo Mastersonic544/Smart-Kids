@@ -13,6 +13,7 @@ class DashboardRedirectController extends Controller
         $user = Auth::user();
 
         return match (true) {
+            $user->hasRole('superadmin') => redirect()->route('superadmin.dashboard'),
             $user->hasRole('admin') => redirect()->route('admin.dashboard'),
             $user->hasRole('educateur') => redirect()->route('educateur.dashboard'),
             $user->hasRole('parent') => redirect()->route('parent.dashboard'),

@@ -28,6 +28,11 @@ class User extends Authenticatable
         'is_system',
         'monthly_tuition_tnd',
         'tenant_admin_id',
+        'subscription_status',
+        'billing_period',
+        'subscription_started_at',
+        'subscription_due_at',
+        'frozen_at',
     ];
 
     protected $hidden = [
@@ -43,7 +48,30 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_system' => 'boolean',
             'monthly_tuition_tnd' => 'decimal:3',
+            'subscription_started_at' => 'datetime',
+            'subscription_due_at' => 'datetime',
+            'frozen_at' => 'datetime',
         ];
+    }
+
+    /**
+     * True when this user (or its tenant admin) is currently frozen because the
+     * admin failed to pay the SaaS subscription on time. Frozen accounts cannot
+     * write — see EnsureNotFrozen middleware.
+     */
+    public function isFrozen(): bool
+    {
+        if ($this->subscription_status === 'frozen') {
+            return true;
+        }
+
+        if ($this->tenant_admin_id !== null) {
+            return self::where('id', $this->tenant_admin_id)
+                ->where('subscription_status', 'frozen')
+                ->exists();
+        }
+
+        return false;
     }
 
     public function children(): HasMany
