@@ -33,11 +33,15 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="card-premium p-6">
                     <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-4">Revenus mensuels (6 mois)</h3>
-                    <canvas id="revenueChart" height="160"></canvas>
+                    <div class="relative h-72">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
                 </div>
                 <div class="card-premium p-6">
                     <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-4">Revenu par classe</h3>
-                    <canvas id="classroomChart" height="160"></canvas>
+                    <div class="relative h-72">
+                        <canvas id="classroomChart"></canvas>
+                    </div>
                 </div>
             </div>
 

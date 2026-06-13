@@ -35,7 +35,9 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="card-premium p-6 lg:col-span-2">
                     <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-4">Utilisateurs par rôle</h3>
-                    <canvas id="userRolesChart" height="120"></canvas>
+                    <div class="relative h-64">
+                        <canvas id="userRolesChart"></canvas>
+                    </div>
                 </div>
                 <div class="card-premium p-6">
                     <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-4">Plan {{ $plan['name'] }}</h3>
