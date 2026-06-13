@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ChildController;
@@ -20,13 +21,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    $user = auth()->user();
-    if ($user->hasRole('admin')) return redirect()->route('admin.dashboard');
-    if ($user->hasRole('educateur')) return redirect()->route('educateur.dashboard');
-    if ($user->hasRole('parent')) return redirect()->route('parent.dashboard');
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', DashboardRedirectController::class)
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

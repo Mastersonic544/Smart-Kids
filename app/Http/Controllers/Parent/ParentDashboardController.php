@@ -74,11 +74,7 @@ class ParentDashboardController extends Controller
      */
     public function payNow(Request $request, Payment $payment)
     {
-        // Verify the payment belongs to one of the parent's children
-        $childIds = auth()->user()->children()->pluck('id');
-        if (!$childIds->contains($payment->child_id)) {
-            abort(403);
-        }
+        $this->authorize('pay', $payment);
 
         $this->parentDashboardService->processPayment($payment);
 
