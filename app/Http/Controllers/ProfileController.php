@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
 use App\Notifications\TuitionChangedNotification;
+use App\Services\Messages\SystemMessenger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,8 @@ class ProfileController extends Controller
             'user' => $request->user(),
         ]);
     }
+
+    public function __construct(private readonly SystemMessenger $systemMessenger) {}
 
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
@@ -53,6 +56,11 @@ class ProfileController extends Controller
                     newAmount: $newTuition,
                     kindergartenName: $user->name,
                 ));
+                $this->systemMessenger->broadcast(
+                    $parents,
+                    "Frais de scolarité mis à jour : nouveau montant mensuel de "
+                        .number_format($newTuition, 3, ',', ' ').' TND chez '.$user->name.'.'
+                );
             }
         }
 

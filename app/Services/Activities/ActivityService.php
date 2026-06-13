@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Notifications\ActivityApprovedNotification;
 use App\Notifications\ActivityRejectedNotification;
 use App\Repositories\Activities\ActivityRepositoryInterface;
+use App\Services\Messages\SystemMessenger;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Notification;
 
@@ -16,9 +17,12 @@ class ActivityService
 {
     protected ActivityRepositoryInterface $activityRepository;
 
-    public function __construct(ActivityRepositoryInterface $activityRepository)
+    protected SystemMessenger $systemMessenger;
+
+    public function __construct(ActivityRepositoryInterface $activityRepository, SystemMessenger $systemMessenger)
     {
         $this->activityRepository = $activityRepository;
+        $this->systemMessenger = $systemMessenger;
     }
 
     public function getAllActivities(): Collection
@@ -80,7 +84,13 @@ class ActivityService
         // Notify every parent whose child is enrolled in this activity.
         $parentIds = $activity->children()->with('parent')->get()->pluck('parent.id')->filter()->unique();
         if ($parentIds->isNotEmpty()) {
-            Notification::send(User::whereIn('id', $parentIds)->get(), new ActivityApprovedNotification($activity));
+            $parents = User::whereIn('id', $parentIds)->get();
+            Notification::send($parents, new ActivityApprovedNotification($activity));
+            $this->systemMessenger->broadcast(
+                $parents,
+                "Activité approuvée : « {$activity->name} » est confirmée pour le "
+                    .$activity->scheduled_date->translatedFormat('d F Y').'.'
+            );
         }
 
         return $activity->refresh();

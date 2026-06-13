@@ -4,59 +4,32 @@ namespace App\Services\Messages;
 
 use App\Models\Message;
 use App\Models\User;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as SupportCollection;
 
-/**
- * Service to handle Messenger-clone messaging logic.
- */
 class MessageService
 {
-    /**
-     * Get all conversations for a user (inbox), with latest message per contact.
-     *
-     * @param  int  $userId
-     * @return Collection
-     */
-    public function getInbox($userId)
+    public function getInbox(int $userId): SupportCollection
     {
         return Message::where('sender_id', $userId)
             ->orWhere('receiver_id', $userId)
             ->with(['sender', 'receiver'])
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
             ->get()
-            ->groupBy(function ($message) use ($userId) {
-                return $message->sender_id == $userId ? $message->receiver_id : $message->sender_id;
-            })
-            ->map(function ($conversation) {
-                return $conversation->first();
-            });
+            ->groupBy(fn (Message $m) => $m->sender_id === $userId ? $m->receiver_id : $m->sender_id)
+            ->map(fn (SupportCollection $conversation) => $conversation->first());
     }
 
-    /**
-     * Get the conversation between two users.
-     *
-     * @param  int  $userId
-     * @param  int  $otherUserId
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getConversation($userId, $otherUserId)
+    public function getConversation(int $userId, int $otherUserId): Collection
     {
-        return Message::where(function ($query) use ($userId, $otherUserId) {
-            $query->where('sender_id', $userId)->where('receiver_id', $otherUserId);
-        })->orWhere(function ($query) use ($userId, $otherUserId) {
-            $query->where('sender_id', $otherUserId)->where('receiver_id', $userId);
-        })->with(['sender'])->orderBy('created_at', 'asc')->get();
+        return Message::where(function ($q) use ($userId, $otherUserId) {
+            $q->where('sender_id', $userId)->where('receiver_id', $otherUserId);
+        })->orWhere(function ($q) use ($userId, $otherUserId) {
+            $q->where('sender_id', $otherUserId)->where('receiver_id', $userId);
+        })->with('sender')->orderBy('created_at')->get();
     }
 
-    /**
-     * Send a message from one user to another.
-     *
-     * @param  int  $senderId
-     * @param  int  $receiverId
-     * @param  string  $body
-     * @return Message
-     */
-    public function sendMessage($senderId, $receiverId, $body)
+    public function sendMessage(int $senderId, int $receiverId, string $body): Message
     {
         return Message::create([
             'sender_id' => $senderId,
@@ -65,9 +38,6 @@ class MessageService
         ]);
     }
 
-    /**
-     * Mark all messages from a user as read.
-     */
     public function markConversationAsRead(int $currentUserId, int $otherUserId): void
     {
         Message::where('sender_id', $otherUserId)
@@ -76,53 +46,93 @@ class MessageService
             ->update(['read_at' => now()]);
     }
 
-    /**
-     * Get new messages after a given message ID (for polling).
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getNewMessages(int $userId, int $otherUserId, int $afterId)
+    public function getNewMessages(int $userId, int $otherUserId, int $afterId): Collection
     {
         return Message::where('id', '>', $afterId)
-            ->where(function ($query) use ($userId, $otherUserId) {
-                $query->where(function ($q) use ($userId, $otherUserId) {
-                    $q->where('sender_id', $userId)->where('receiver_id', $otherUserId);
-                })->orWhere(function ($q) use ($userId, $otherUserId) {
-                    $q->where('sender_id', $otherUserId)->where('receiver_id', $userId);
+            ->where(function ($q) use ($userId, $otherUserId) {
+                $q->where(function ($inner) use ($userId, $otherUserId) {
+                    $inner->where('sender_id', $userId)->where('receiver_id', $otherUserId);
+                })->orWhere(function ($inner) use ($userId, $otherUserId) {
+                    $inner->where('sender_id', $otherUserId)->where('receiver_id', $userId);
                 });
             })
             ->with('sender')
-            ->orderBy('created_at', 'asc')
+            ->orderBy('created_at')
             ->get();
     }
 
     /**
-     * Get users that the current user can message (role-aware).
+     * Build a contact list ordered per the SmartKids spec:
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     *   1. SmartKids system account (if exists)
+     *   2. Tenant admin (always at the top of the human contacts)
+     *   3. Educators in this tenant (or parents, if the current user is an educator)
+     *   4. Other parents in this tenant (if the current user is a parent)
+     *
+     * Tenancy is determined by the current user's tenant_admin_id (parents/educators)
+     * or by their own id (admins).
      */
-    public function getContactableUsers(User $user)
+    public function getContactableUsers(User $user): SupportCollection
     {
-        return User::where('id', '!=', $user->id)->orderBy('name')->get();
+        $tenantAdminId = $user->hasRole('admin') ? $user->id : $user->tenant_admin_id;
+
+        $contacts = collect();
+
+        // 1. System account
+        $system = User::where('is_system', true)->first();
+        if ($system) {
+            $contacts->push($system);
+        }
+
+        if ($tenantAdminId === null) {
+            // No tenant scope known (e.g. superadmin) — fall back to all non-self users.
+            return $contacts->merge(
+                User::where('id', '!=', $user->id)
+                    ->where('is_system', false)
+                    ->orderBy('name')
+                    ->get()
+            )->unique('id')->values();
+        }
+
+        // 2. The tenant admin (skip if I am the admin)
+        if (! $user->hasRole('admin')) {
+            $admin = User::find($tenantAdminId);
+            if ($admin && $admin->id !== $user->id) {
+                $contacts->push($admin);
+            }
+        }
+
+        // 3+4. Other tenant members, ordered: educateurs first, then parents
+        $others = User::where('id', '!=', $user->id)
+            ->where('is_system', false)
+            ->where(function ($q) use ($tenantAdminId) {
+                $q->where('tenant_admin_id', $tenantAdminId)
+                    ->orWhere('id', $tenantAdminId);
+            })
+            ->whereDoesntHave('roles', fn ($q) => $q->where('name', 'admin'))
+            ->with('roles')
+            ->orderBy('name')
+            ->get()
+            ->sortBy(fn (User $u) => $u->hasRole('educateur') ? 0 : 1)
+            ->values();
+
+        return $contacts->merge($others)->unique('id')->values();
     }
 
-    /**
-     * Search users by name for conversation picker.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function searchUsers(User $currentUser, string $query)
+    public function searchUsers(User $currentUser, string $query): SupportCollection
     {
-        return User::where('id', '!=', $currentUser->id)
-            ->where('name', 'LIKE', "%{$query}%")
-            ->select('id', 'name', 'email')
-            ->limit(10)
-            ->get();
+        return $this->getContactableUsers($currentUser)
+            ->filter(fn (User $u) => str_contains(strtolower($u->name), strtolower($query)))
+            ->take(10)
+            ->values()
+            ->map(fn (User $u) => [
+                'id' => $u->id,
+                'name' => $u->name,
+                'email' => $u->email,
+                'is_system' => (bool) $u->is_system,
+            ]);
     }
 
-    /**
-     * Get unread message count for a user.
-     */
     public function getUnreadCount(int $userId): int
     {
         return Message::where('receiver_id', $userId)

@@ -20,9 +20,21 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         // Define roles
+        Role::firstOrCreate(['name' => 'superadmin']);
         Role::firstOrCreate(['name' => 'admin']);
         Role::firstOrCreate(['name' => 'educateur']);
         Role::firstOrCreate(['name' => 'parent']);
+
+        // System user used as the "SmartKids" sender for automated messages
+        // (tuition changes, activity approvals, payment-due reminders, ...).
+        User::firstOrCreate(
+            ['email' => 'system@smartkids.local'],
+            [
+                'name' => 'SmartKids',
+                'password' => Hash::make(\Illuminate\Support\Str::random(40)),
+                'is_system' => true,
+            ]
+        );
 
         // Create Admin user
         $admin = User::firstOrCreate(
