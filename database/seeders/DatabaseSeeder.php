@@ -15,14 +15,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            RoleSeeder::class,      // Spatie roles (admin, educateur, parent)
-            UserSeeder::class,      // Users and associated Teacher profiles
-            ClassroomSeeder::class, // Defined sequence of stages
-            ChildrenSeeder::class,  // 35 children linked to parents and classrooms
-            AttendanceSeeder::class, // 3 months of history
-            PaymentSeeder::class,    // 2 months of history
-            ActivitySeeder::class,   // Activities with participants
-            MealSeeder::class,       // 4 weeks of menus
+            RoleSeeder::class,      // Spatie roles + superadmin + SmartKids system user
+            MealSeeder::class,      // 4 weeks of menus (tenant-agnostic)
+            VisionSeeder::class,    // 2 admin tenants with full lifecycle dataset
         ]);
     }
 }
