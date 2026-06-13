@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== SmartKids Design System ===== */
+
+/* Glassmorphism utility */
+.glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Gradient text */
+.gradient-text {
+    background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Premium card styles */
+.card-premium {
+    @apply bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden transition-all duration-300;
+}
+.card-premium:hover {
+    @apply shadow-lg -translate-y-0.5;
+}
+
+.dark .card-premium {
+    @apply bg-slate-800 border-slate-700;
+}
+
+/* Stat card gradient overlays */
+.stat-card {
+    @apply relative overflow-hidden rounded-2xl p-6 transition-all duration-300;
+}
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    opacity: 0.1;
+    transition: opacity 0.3s;
+}
+.stat-card:hover::before {
+    opacity: 0.15;
+}
+
+/* Teal stat card */
+.stat-teal {
+    @apply bg-gradient-to-br from-teal-500 to-teal-600 text-white;
+}
+.stat-teal::before {
+    background: white;
+}
+
+/* Amber stat card */
+.stat-amber {
+    @apply bg-gradient-to-br from-amber-500 to-orange-500 text-white;
+}
+.stat-amber::before {
+    background: white;
+}
+
+/* Indigo stat card */
+.stat-indigo {
+    @apply bg-gradient-to-br from-indigo-500 to-purple-600 text-white;
+}
+.stat-indigo::before {
+    background: white;
+}
+
+/* Rose stat card */
+.stat-rose {
+    @apply bg-gradient-to-br from-rose-500 to-pink-600 text-white;
+}
+.stat-rose::before {
+    background: white;
+}
+
+/* Sidebar nav link style */
+.nav-link-premium {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200;
+}
+.nav-link-premium:hover {
+    @apply bg-teal-50 text-teal-700;
+}
+.nav-link-premium.active {
+    @apply bg-teal-600 text-white shadow-md shadow-teal-200;
+}
+.dark .nav-link-premium:hover {
+    @apply bg-teal-900/30 text-teal-400;
+}
+.dark .nav-link-premium.active {
+    @apply bg-teal-600 text-white shadow-teal-900;
+}
+
+/* Messenger styles */
+.messenger-sidebar {
+    @apply w-full md:w-96 border-r border-slate-200 flex flex-col;
+}
+.dark .messenger-sidebar {
+    @apply border-slate-700;
+}
+
+.messenger-contact {
+    @apply flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200;
+}
+.messenger-contact:hover {
+    @apply bg-slate-50;
+}
+.messenger-contact.active {
+    @apply bg-teal-50 border-l-4 border-teal-500;
+}
+.dark .messenger-contact:hover {
+    @apply bg-slate-700;
+}
+.dark .messenger-contact.active {
+    @apply bg-teal-900/30;
+}
+
+.chat-bubble {
+    @apply max-w-xs md:max-w-md rounded-2xl px-4 py-2.5 text-sm leading-relaxed;
+}
+.chat-bubble-sent {
+    @apply bg-teal-600 text-white rounded-br-md;
+}
+.chat-bubble-received {
+    @apply bg-white text-slate-800 shadow-sm border border-slate-100 rounded-bl-md;
+}
+.dark .chat-bubble-received {
+    @apply bg-slate-700 text-slate-100 border-slate-600;
+}
+
+/* Badge styles */
+.badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+.badge-success {
+    @apply bg-emerald-100 text-emerald-700;
+}
+.badge-warning {
+    @apply bg-amber-100 text-amber-700;
+}
+.badge-danger {
+    @apply bg-rose-100 text-rose-700;
+}
+.badge-info {
+    @apply bg-sky-100 text-sky-700;
+}
+.dark .badge-success {
+    @apply bg-emerald-900/30 text-emerald-400;
+}
+.dark .badge-warning {
+    @apply bg-amber-900/30 text-amber-400;
+}
+.dark .badge-danger {
+    @apply bg-rose-900/30 text-rose-400;
+}
+.dark .badge-info {
+    @apply bg-sky-900/30 text-sky-400;
+}
+
+/* Micro-animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out both;
+}
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out both;
+}
+.animate-pulse-dot {
+    animation: pulse-dot 1.5s infinite;
+}
+
+/* Scrollbar styling */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Button premium */
+.btn-primary {
+    @apply inline-flex items-center justify-center px-5 py-2.5 bg-teal-600 text-white rounded-xl font-semibold text-sm shadow-md shadow-teal-200 hover:bg-teal-700 hover:-translate-y-0.5 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-200;
+}
+.dark .btn-primary {
+    @apply shadow-teal-900;
+}
+
+.btn-secondary {
+    @apply inline-flex items-center justify-center px-5 py-2.5 bg-white text-slate-700 border border-slate-200 rounded-xl font-semibold text-sm hover:bg-slate-50 hover:-translate-y-0.5 focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 transition-all duration-200;
+}
+.dark .btn-secondary {
+    @apply bg-slate-700 text-slate-200 border-slate-600 hover:bg-slate-600;
+}
+
+.btn-danger {
+    @apply inline-flex items-center justify-center px-5 py-2.5 bg-rose-600 text-white rounded-xl font-semibold text-sm shadow-md shadow-rose-200 hover:bg-rose-700 hover:-translate-y-0.5 transition-all duration-200;
+}

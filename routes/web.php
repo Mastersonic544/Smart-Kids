@@ -1,0 +1,84 @@
+<?php
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ChildController;
+use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\MealController;
+use App\Http\Controllers\Admin\ClassroomController;
+use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\EnrollmentController;
+use App\Http\Controllers\Admin\ParentController;
+use App\Http\Controllers\Parent\ParentDashboardController;
+use App\Http\Controllers\Educateur\EducateurDashboardController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    $user = auth()->user();
+    if ($user->hasRole('admin')) return redirect()->route('admin.dashboard');
+    if ($user->hasRole('educateur')) return redirect()->route('educateur.dashboard');
+    if ($user->hasRole('parent')) return redirect()->route('parent.dashboard');
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Messaging (shared across all roles)
+    Route::get('/messages', [MessageController::class, 'inbox'])->name('messages.inbox');
+    Route::get('/messages/new', [MessageController::class, 'newConversation'])->name('messages.new');
+    Route::get('/messages/search', [MessageController::class, 'searchUsers'])->name('messages.search');
+    Route::get('/messages/{user}', [MessageController::class, 'conversation'])->name('messages.conversation');
+    Route::post('/messages/send', [MessageController::class, 'send'])->name('messages.send');
+    Route::post('/messages/{user}/read', [MessageController::class, 'markAsRead'])->name('messages.read');
+    Route::get('/messages/{user}/poll', [MessageController::class, 'poll'])->name('messages.poll');
+
+    // Notifications
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+});
+
+// ===== ADMIN ROUTES =====
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('children', ChildController::class);
+    Route::resource('parents', ParentController::class)->except(['show']);
+    Route::resource('teachers', TeacherController::class)->except(['show']);
+    Route::resource('activities', ActivityController::class);
+    Route::post('activities/{activity}/enroll', [ActivityController::class, 'enrollChild'])->name('activities.enroll');
+    Route::post('activities/{activity}/attendance', [ActivityController::class, 'markAttendance'])->name('activities.attendance');
+    Route::resource('meals', MealController::class)->except(['edit', 'update', 'destroy']);
+    Route::resource('classrooms', ClassroomController::class);
+    Route::resource('payments', PaymentController::class)->except(['create', 'store', 'show', 'destroy']);
+    Route::resource('enrollments', EnrollmentController::class)->except(['create', 'store', 'show', 'destroy']);
+});
+
+// ===== EDUCATOR ROUTES =====
+Route::middleware(['auth', 'role:educateur'])->prefix('educateur')->name('educateur.')->group(function () {
+    Route::get('/dashboard', [EducateurDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/students', [EducateurDashboardController::class, 'students'])->name('students');
+    Route::get('/attendance', [EducateurDashboardController::class, 'attendance'])->name('attendance');
+    Route::post('/attendance', [EducateurDashboardController::class, 'storeAttendance'])->name('attendance.store');
+    Route::get('/activities', [EducateurDashboardController::class, 'activities'])->name('activities');
+});
+
+// ===== PARENT ROUTES =====
+Route::middleware(['auth', 'role:parent'])->prefix('parent')->name('parent.')->group(function () {
+    Route::get('/dashboard', [ParentDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/meals', [ParentDashboardController::class, 'meals'])->name('meals');
+    Route::get('/payments', [ParentDashboardController::class, 'payments'])->name('payments');
+    Route::post('/payments/{payment}/pay', [ParentDashboardController::class, 'payNow'])->name('payments.pay');
+    Route::get('/activities', [ParentDashboardController::class, 'activities'])->name('activities');
+    Route::get('/teachers', [ParentDashboardController::class, 'teachers'])->name('teachers');
+});
+
+require __DIR__.'/auth.php';
