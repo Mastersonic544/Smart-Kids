@@ -13,7 +13,23 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6"
+          x-data="{
+            originalTuition: '{{ $user->monthly_tuition_tnd }}',
+            confirmIfTuitionChanged(event) {
+                if (!{{ $user->hasRole('admin') ? 'true' : 'false' }}) return;
+                const field = this.$el.querySelector('input[name=monthly_tuition_tnd]');
+                if (!field) return;
+                const newVal = field.value.trim();
+                if (newVal === this.originalTuition) return;
+                const proceed = confirm(
+                    'Changer le tarif mensuel à ' + newVal + ' TND ? '
+                    + 'Tous les parents de votre établissement recevront une notification.'
+                );
+                if (!proceed) event.preventDefault();
+            }
+          }"
+          @submit="confirmIfTuitionChanged($event)">
         @csrf
         @method('patch')
 
@@ -46,6 +62,26 @@
                 </div>
             @endif
         </div>
+
+        @role('admin')
+            <div class="border-t border-slate-200 dark:border-slate-700 pt-4">
+                <x-input-label for="monthly_tuition_tnd" value="Frais de scolarité mensuels (TND)" />
+                <x-text-input
+                    id="monthly_tuition_tnd"
+                    name="monthly_tuition_tnd"
+                    type="number"
+                    step="0.001"
+                    min="0"
+                    class="mt-1 block w-full"
+                    :value="old('monthly_tuition_tnd', $user->monthly_tuition_tnd)"
+                    placeholder="Ex: 450.000"
+                />
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                    Modifier ce montant déclenchera une notification automatique à tous les parents inscrits.
+                </p>
+                <x-input-error class="mt-2" :messages="$errors->get('monthly_tuition_tnd')" />
+            </div>
+        @endrole
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
