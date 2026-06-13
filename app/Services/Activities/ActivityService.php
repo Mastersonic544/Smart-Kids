@@ -2,9 +2,9 @@
 
 namespace App\Services\Activities;
 
+use App\Models\Activity;
 use App\Repositories\Activities\ActivityRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\Activity;
 
 /**
  * Service to handle business logic for Activities.
@@ -59,7 +59,9 @@ class ActivityService
     public function getActivityReport(int $activityId): array
     {
         $activity = $this->activityRepository->findById($activityId);
-        if (!$activity) return [];
+        if (! $activity) {
+            return [];
+        }
 
         $totalEnrolled = $activity->children->count();
         $attended = $activity->children->where('pivot.attended', true)->count();

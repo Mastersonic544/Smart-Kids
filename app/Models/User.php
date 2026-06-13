@@ -17,7 +17,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -56,8 +56,6 @@ class User extends Authenticatable
 
     /**
      * Get the children belonging to this parent user.
-     *
-     * @return HasMany
      */
     public function children(): HasMany
     {
@@ -66,8 +64,6 @@ class User extends Authenticatable
 
     /**
      * Get the teacher profile for this educator user.
-     *
-     * @return HasOne
      */
     public function teacher(): HasOne
     {
@@ -76,8 +72,6 @@ class User extends Authenticatable
 
     /**
      * Get the messages sent by this user.
-     *
-     * @return HasMany
      */
     public function sentMessages(): HasMany
     {
@@ -86,8 +80,6 @@ class User extends Authenticatable
 
     /**
      * Get the messages received by this user.
-     *
-     * @return HasMany
      */
     public function receivedMessages(): HasMany
     {

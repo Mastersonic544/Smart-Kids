@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Child>
+ * @extends Factory<Child>
  */
 class ChildFactory extends Factory
 {
@@ -23,12 +23,12 @@ class ChildFactory extends Factory
     {
         $tunisianFirstNames = [
             'Ahmed', 'Mohamed', 'Yassine', 'Amine', 'Omar', 'Ali', 'Hamza', 'Sami', 'Youssef', 'Adem',
-            'Sarra', 'Mariem', 'Fatma', 'Nour', 'Lina', 'Eya', 'Salma', 'Ines', 'Malek', 'Hela'
+            'Sarra', 'Mariem', 'Fatma', 'Nour', 'Lina', 'Eya', 'Salma', 'Ines', 'Malek', 'Hela',
         ];
 
         $tunisianLastNames = [
             'Trabelsi', 'Ben Ali', 'Gharbi', 'Mansour', 'Jlassi', 'Ayari', 'Dridi', 'Hamdi', 'Saidi', 'Masmoudi',
-            'Bouaziz', 'Rezgui', 'Abidi', 'Sellami', 'Cherif', 'Hajri', 'Mejri', 'Tounsi', 'Mahmoudi', 'Kallel'
+            'Bouaziz', 'Rezgui', 'Abidi', 'Sellami', 'Cherif', 'Hajri', 'Mejri', 'Tounsi', 'Mahmoudi', 'Kallel',
         ];
 
         $allergiesList = ['Arachides', 'Lait', 'Gluten', 'Œufs', 'Soja', 'Pollen', 'Poussière'];

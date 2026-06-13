@@ -2,12 +2,13 @@
 
 namespace App\Services\Notifications;
 
-use App\Models\User;
 use App\Models\Child;
 use App\Models\Payment;
+use App\Models\User;
 use App\Notifications\AbsenceRecordedNotification;
-use App\Notifications\PaymentOverdueNotification;
 use App\Notifications\NewAnnouncementNotification;
+use App\Notifications\PaymentOverdueNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Support\Facades\Notification;
 
 /**
@@ -18,8 +19,8 @@ class NotificationService
     /**
      * Notify parent of a child's absence.
      *
-     * @param int $childId
-     * @param string $date
+     * @param  int  $childId
+     * @param  string  $date
      * @return void
      */
     public function notifyParentOfAbsence($childId, $date)
@@ -33,7 +34,7 @@ class NotificationService
     /**
      * Notify parent of an overdue payment.
      *
-     * @param int $paymentId
+     * @param  int  $paymentId
      * @return void
      */
     public function notifyParentOfOverduePayment($paymentId)
@@ -47,9 +48,9 @@ class NotificationService
     /**
      * Broadcast an announcement to all users with a specific role.
      *
-     * @param string $title
-     * @param string $message
-     * @param string $targetRole
+     * @param  string  $title
+     * @param  string  $message
+     * @param  string  $targetRole
      * @return void
      */
     public function broadcastAnnouncement($title, $message, $targetRole)
@@ -61,19 +62,20 @@ class NotificationService
     /**
      * Get unread notifications for a user.
      *
-     * @param int $userId
-     * @return \Illuminate\Notifications\DatabaseNotificationCollection
+     * @param  int  $userId
+     * @return DatabaseNotificationCollection
      */
     public function getUnreadNotifications($userId)
     {
         $user = User::find($userId);
+
         return $user ? $user->unreadNotifications : collect();
     }
 
     /**
      * Mark all notifications as read for a user.
      *
-     * @param int $userId
+     * @param  int  $userId
      * @return void
      */
     public function markAllAsRead($userId)

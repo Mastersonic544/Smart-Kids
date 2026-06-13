@@ -18,8 +18,6 @@ class EducateurDashboardController extends Controller
 
     /**
      * Inject EducateurDashboardService.
-     *
-     * @param EducateurDashboardService $educateurService
      */
     public function __construct(EducateurDashboardService $educateurService)
     {
@@ -28,44 +26,39 @@ class EducateurDashboardController extends Controller
 
     /**
      * Show educator dashboard with class overview.
-     *
-     * @return View
      */
     public function index(): View
     {
         $data = $this->educateurService->getDashboardData(auth()->user());
+
         return view('educateur.dashboard', $data);
     }
 
     /**
      * Show students in the educator's assigned classroom.
-     *
-     * @return View
      */
     public function students(): View
     {
         $data = $this->educateurService->getClassStudents(auth()->user());
+
         return view('educateur.students.index', $data);
     }
 
     /**
      * Show attendance management form.
-     *
-     * @param Request $request
-     * @return View
      */
     public function attendance(Request $request): View
     {
         $date = $request->get('date', now()->format('Y-m-d'));
         $data = $this->educateurService->getAttendanceForDate(auth()->user(), $date);
+
         return view('educateur.attendance.index', $data);
     }
 
     /**
      * Store attendance records for a given day.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  Request  $request
      */
     public function storeAttendance(StoreAttendanceRequest $request): RedirectResponse
     {
@@ -79,12 +72,11 @@ class EducateurDashboardController extends Controller
 
     /**
      * Show activities managed by this educator.
-     *
-     * @return View
      */
     public function activities(): View
     {
         $data = $this->educateurService->getEducatorActivities(auth()->user());
+
         return view('educateur.activities.index', $data);
     }
 }

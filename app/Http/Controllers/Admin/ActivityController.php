@@ -25,28 +25,33 @@ class ActivityController extends Controller
     public function index(): View
     {
         $activities = $this->activityService->getAllActivities();
+
         return view('admin.activities.index', compact('activities'));
     }
 
     public function create(): View
     {
         $teachers = Teacher::all();
+
         return view('admin.activities.create', compact('teachers'));
     }
 
     public function store(StoreActivityRequest $request): RedirectResponse
     {
         $this->activityService->createActivity($request->validated());
+
         return redirect()->route('admin.activities.index')->with('success', 'Activité créée avec succès.');
     }
 
     public function show(int $id): View
     {
         $activity = $this->activityService->getActivityById($id);
-        if (!$activity) abort(404);
+        if (! $activity) {
+            abort(404);
+        }
 
         $report = $this->activityService->getActivityReport($id);
-        
+
         // Children array for selection to enroll
         $allChildren = Child::all();
 
@@ -56,21 +61,26 @@ class ActivityController extends Controller
     public function edit(int $id): View
     {
         $activity = $this->activityService->getActivityById($id);
-        if (!$activity) abort(404);
-        
+        if (! $activity) {
+            abort(404);
+        }
+
         $teachers = Teacher::all();
+
         return view('admin.activities.edit', compact('activity', 'teachers'));
     }
 
     public function update(UpdateActivityRequest $request, int $id): RedirectResponse
     {
         $this->activityService->updateActivity($id, $request->validated());
+
         return redirect()->route('admin.activities.index')->with('success', 'Activité mise à jour.');
     }
 
     public function destroy(int $id): RedirectResponse
     {
         $this->activityService->deleteActivity($id);
+
         return redirect()->route('admin.activities.index')->with('success', 'Activité supprimée.');
     }
 
@@ -85,6 +95,7 @@ class ActivityController extends Controller
     {
         $childIds = $request->input('attended_children', []);
         $this->activityService->markAttendance($activityId, $childIds);
+
         return redirect()->route('admin.activities.show', $activityId)->with('success', 'Présences mises à jour.');
     }
 }

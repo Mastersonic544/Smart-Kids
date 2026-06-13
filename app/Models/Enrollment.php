@@ -26,8 +26,6 @@ class Enrollment extends Model
 
     /**
      * Get the child this enrollment belongs to.
-     *
-     * @return BelongsTo
      */
     public function child(): BelongsTo
     {

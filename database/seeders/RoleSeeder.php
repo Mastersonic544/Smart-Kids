@@ -2,22 +2,20 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
-use App\Models\User;
 
 /**
  * Class RoleSeeder
- * 
+ *
  * Seeds the database with the initial roles and test users.
  */
 class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run(): void
     {
@@ -34,7 +32,7 @@ class RoleSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]
         );
-        if (!$admin->hasRole('admin')) {
+        if (! $admin->hasRole('admin')) {
             $admin->assignRole('admin');
         }
 
@@ -46,7 +44,7 @@ class RoleSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]
         );
-        if (!$educateur->hasRole('educateur')) {
+        if (! $educateur->hasRole('educateur')) {
             $educateur->assignRole('educateur');
         }
 
@@ -58,7 +56,7 @@ class RoleSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]
         );
-        if (!$parent->hasRole('parent')) {
+        if (! $parent->hasRole('parent')) {
             $parent->assignRole('parent');
         }
     }

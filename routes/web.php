@@ -1,20 +1,20 @@
 <?php
 
-use App\Http\Controllers\DashboardRedirectController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ChildController;
-use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\ActivityController;
-use App\Http\Controllers\Admin\MealController;
+use App\Http\Controllers\Admin\ChildController;
 use App\Http\Controllers\Admin\ClassroomController;
-use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EnrollmentController;
+use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\ParentController;
-use App\Http\Controllers\Parent\ParentDashboardController;
+use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\Educateur\EducateurDashboardController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Parent\ParentDashboardController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {

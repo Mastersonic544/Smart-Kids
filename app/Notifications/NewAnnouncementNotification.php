@@ -3,8 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
@@ -15,13 +13,14 @@ class NewAnnouncementNotification extends Notification
     use Queueable;
 
     protected $announcement_title;
+
     protected $announcement_body;
 
     /**
      * Create a new notification instance.
      *
-     * @param string $announcement_title
-     * @param string $announcement_body
+     * @param  string  $announcement_title
+     * @param  string  $announcement_body
      * @return void
      */
     public function __construct($announcement_title, $announcement_body)

@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Teacher;
+use App\Models\User;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,8 +15,6 @@ class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run(): void
     {
@@ -27,7 +26,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]
         );
-        if (!$admin->hasRole('admin')) {
+        if (! $admin->hasRole('admin')) {
             $admin->assignRole('admin');
         }
 
@@ -54,17 +53,17 @@ class UserSeeder extends Seeder
                 'nom' => $nameParts[1] ?? '',
                 'prenom' => $nameParts[0],
                 'email' => $data['email'],
-                'telephone' => '20' . rand(100000, 999999),
+                'telephone' => '20'.rand(100000, 999999),
             ]);
         }
 
         // 3. Parents (20)
-        $faker = \Faker\Factory::create('fr_FR');
+        $faker = Factory::create('fr_FR');
         for ($i = 1; $i <= 20; $i++) {
             $parent = User::create([
-                'name' => $faker->firstName . ' ' . $faker->lastName,
+                'name' => $faker->firstName.' '.$faker->lastName,
                 'email' => "parent$i@example.com",
-                'phone' => '2' . $faker->randomNumber(7, true),
+                'phone' => '2'.$faker->randomNumber(7, true),
                 'password' => Hash::make('password'),
             ]);
             $parent->assignRole('parent');

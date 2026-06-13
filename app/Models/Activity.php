@@ -25,8 +25,6 @@ class Activity extends Model
 
     /**
      * Get the educator (teacher) responsible for this activity.
-     *
-     * @return BelongsTo
      */
     public function educator(): BelongsTo
     {
@@ -35,8 +33,6 @@ class Activity extends Model
 
     /**
      * Get the children attending this activity.
-     *
-     * @return BelongsToMany
      */
     public function children(): BelongsToMany
     {

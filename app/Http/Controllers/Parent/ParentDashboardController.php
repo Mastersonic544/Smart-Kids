@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Parent;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Services\Parent\ParentDashboardService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -22,8 +23,6 @@ class ParentDashboardController extends Controller
 
     /**
      * Show parent dashboard with children summary.
-     *
-     * @return View
      */
     public function index(): View
     {
@@ -35,19 +34,16 @@ class ParentDashboardController extends Controller
 
     /**
      * Show weekly meals menu.
-     *
-     * @return View
      */
     public function meals(): View
     {
         $meal = $this->parentDashboardService->getCurrentMenu();
+
         return view('parent.meals.index', compact('meal'));
     }
 
     /**
      * Show payment history for parent's children.
-     *
-     * @return View
      */
     public function payments(): View
     {
@@ -58,7 +54,7 @@ class ParentDashboardController extends Controller
         foreach ($children as $child) {
             $paymentsByChild[$child->id] = [
                 'child' => $child,
-                'payments' => $this->parentDashboardService->getPaymentHistory($child->id)
+                'payments' => $this->parentDashboardService->getPaymentHistory($child->id),
             ];
         }
 
@@ -68,9 +64,7 @@ class ParentDashboardController extends Controller
     /**
      * Process a simulated payment.
      *
-     * @param Request $request
-     * @param Payment $payment
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function payNow(Request $request, Payment $payment)
     {
@@ -84,8 +78,6 @@ class ParentDashboardController extends Controller
 
     /**
      * Show children's activities.
-     *
-     * @return View
      */
     public function activities(): View
     {
@@ -104,8 +96,6 @@ class ParentDashboardController extends Controller
 
     /**
      * Show children's teachers.
-     *
-     * @return View
      */
     public function teachers(): View
     {

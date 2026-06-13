@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Teachers;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateTeacherRequest extends FormRequest
@@ -17,14 +18,14 @@ class UpdateTeacherRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:teachers,email,' . $this->route('teacher')],
+            'email' => ['required', 'email', 'unique:teachers,email,'.$this->route('teacher')],
             'telephone' => ['nullable', 'string', 'max:20'],
             'document_contractuel' => ['nullable', 'string'],
         ];

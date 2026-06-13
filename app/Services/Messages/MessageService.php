@@ -4,7 +4,7 @@ namespace App\Services\Messages;
 
 use App\Models\Message;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 /**
  * Service to handle Messenger-clone messaging logic.
@@ -14,8 +14,8 @@ class MessageService
     /**
      * Get all conversations for a user (inbox), with latest message per contact.
      *
-     * @param int $userId
-     * @return \Illuminate\Support\Collection
+     * @param  int  $userId
+     * @return Collection
      */
     public function getInbox($userId)
     {
@@ -35,8 +35,8 @@ class MessageService
     /**
      * Get the conversation between two users.
      *
-     * @param int $userId
-     * @param int $otherUserId
+     * @param  int  $userId
+     * @param  int  $otherUserId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getConversation($userId, $otherUserId)
@@ -51,9 +51,9 @@ class MessageService
     /**
      * Send a message from one user to another.
      *
-     * @param int $senderId
-     * @param int $receiverId
-     * @param string $body
+     * @param  int  $senderId
+     * @param  int  $receiverId
+     * @param  string  $body
      * @return Message
      */
     public function sendMessage($senderId, $receiverId, $body)
@@ -67,10 +67,6 @@ class MessageService
 
     /**
      * Mark all messages from a user as read.
-     *
-     * @param int $currentUserId
-     * @param int $otherUserId
-     * @return void
      */
     public function markConversationAsRead(int $currentUserId, int $otherUserId): void
     {
@@ -83,9 +79,6 @@ class MessageService
     /**
      * Get new messages after a given message ID (for polling).
      *
-     * @param int $userId
-     * @param int $otherUserId
-     * @param int $afterId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getNewMessages(int $userId, int $otherUserId, int $afterId)
@@ -106,7 +99,6 @@ class MessageService
     /**
      * Get users that the current user can message (role-aware).
      *
-     * @param User $user
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getContactableUsers(User $user)
@@ -117,8 +109,6 @@ class MessageService
     /**
      * Search users by name for conversation picker.
      *
-     * @param User $currentUser
-     * @param string $query
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function searchUsers(User $currentUser, string $query)
@@ -132,9 +122,6 @@ class MessageService
 
     /**
      * Get unread message count for a user.
-     *
-     * @param int $userId
-     * @return int
      */
     public function getUnreadCount(int $userId): int
     {

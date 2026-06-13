@@ -18,8 +18,6 @@ class Classroom extends Model
 
     /**
      * Get the educator (teacher) assigned to this classroom.
-     *
-     * @return BelongsTo
      */
     public function teacher(): BelongsTo
     {
@@ -28,8 +26,6 @@ class Classroom extends Model
 
     /**
      * Get the educator user assigned to this classroom.
-     *
-     * @return BelongsTo
      */
     public function educator(): BelongsTo
     {
@@ -38,8 +34,6 @@ class Classroom extends Model
 
     /**
      * Get all children in this classroom.
-     *
-     * @return HasMany
      */
     public function children(): HasMany
     {

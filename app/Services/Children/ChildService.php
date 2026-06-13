@@ -2,9 +2,9 @@
 
 namespace App\Services\Children;
 
+use App\Models\Child;
 use App\Repositories\Children\ChildRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\Child;
 
 /**
  * Service to handle business logic for Children.
@@ -15,8 +15,6 @@ class ChildService
 
     /**
      * Inject ChildRepositoryInterface.
-     *
-     * @param ChildRepositoryInterface $childRepository
      */
     public function __construct(ChildRepositoryInterface $childRepository)
     {
@@ -25,8 +23,6 @@ class ChildService
 
     /**
      * Get all children.
-     *
-     * @return Collection
      */
     public function getAllChildren(): Collection
     {
@@ -35,9 +31,6 @@ class ChildService
 
     /**
      * Get a child by ID.
-     *
-     * @param int $id
-     * @return Child|null
      */
     public function getChildById(int $id): ?Child
     {
@@ -46,9 +39,6 @@ class ChildService
 
     /**
      * Create a new child.
-     *
-     * @param array $data
-     * @return Child
      */
     public function createChild(array $data): Child
     {
@@ -57,10 +47,6 @@ class ChildService
 
     /**
      * Update an existing child.
-     *
-     * @param int $id
-     * @param array $data
-     * @return Child|null
      */
     public function updateChild(int $id, array $data): ?Child
     {
@@ -69,9 +55,6 @@ class ChildService
 
     /**
      * Delete a child by ID.
-     *
-     * @param int $id
-     * @return bool
      */
     public function deleteChild(int $id): bool
     {
@@ -80,10 +63,6 @@ class ChildService
 
     /**
      * Assign a child to a classroom.
-     *
-     * @param int $childId
-     * @param int $classroomId
-     * @return Child|null
      */
     public function assignToClassroom(int $childId, int $classroomId): ?Child
     {

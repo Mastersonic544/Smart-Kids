@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Messages\SendMessageRequest;
 use App\Models\User;
 use App\Services\Messages\MessageService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Controller handling Messenger-clone internal messaging between users.
@@ -17,8 +20,6 @@ class MessageController extends Controller
 
     /**
      * Inject MessageService.
-     *
-     * @param MessageService $messageService
      */
     public function __construct(MessageService $messageService)
     {
@@ -28,44 +29,46 @@ class MessageController extends Controller
     /**
      * Show the Messenger-clone inbox.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function inbox()
     {
         $conversations = $this->messageService->getInbox(Auth::id());
         $users = $this->messageService->getContactableUsers(Auth::user());
+
         return view('shared.messages.inbox', compact('conversations', 'users'));
     }
 
     /**
      * Show the new conversation user picker.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function newConversation()
     {
         $users = $this->messageService->getContactableUsers(Auth::user());
+
         return view('shared.messages.new', compact('users'));
     }
 
     /**
      * Search users for the new conversation picker (AJAX).
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function searchUsers(Request $request)
     {
         $query = $request->get('q', '');
         $users = $this->messageService->searchUsers(Auth::user(), $query);
+
         return response()->json($users);
     }
 
     /**
      * Show a specific conversation.
      *
-     * @param int $userId
-     * @return \Illuminate\View\View
+     * @param  int  $userId
+     * @return View
      */
     public function conversation($userId)
     {
@@ -81,8 +84,8 @@ class MessageController extends Controller
     /**
      * Send a new message.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @param  Request  $request
+     * @return RedirectResponse|JsonResponse
      */
     public function send(SendMessageRequest $request)
     {
@@ -107,21 +110,21 @@ class MessageController extends Controller
     /**
      * Mark conversation messages as read.
      *
-     * @param int $userId
-     * @return \Illuminate\Http\JsonResponse
+     * @param  int  $userId
+     * @return JsonResponse
      */
     public function markAsRead($userId)
     {
         $this->messageService->markConversationAsRead(Auth::id(), $userId);
+
         return response()->json(['success' => true]);
     }
 
     /**
      * Poll for new messages in a conversation (AJAX).
      *
-     * @param Request $request
-     * @param int $userId
-     * @return \Illuminate\Http\JsonResponse
+     * @param  int  $userId
+     * @return JsonResponse
      */
     public function poll(Request $request, $userId)
     {
