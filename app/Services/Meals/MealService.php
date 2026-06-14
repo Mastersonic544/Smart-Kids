@@ -2,10 +2,10 @@
 
 namespace App\Services\Meals;
 
-use App\Repositories\Meals\MealRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\Meal;
+use App\Repositories\Meals\MealRepositoryInterface;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Service to handle business logic for Meals.
@@ -24,8 +24,6 @@ class MealService
 
     /**
      * Get all meals records.
-     * 
-     * @return Collection
      */
     public function getAllMeals(): Collection
     {
@@ -34,9 +32,6 @@ class MealService
 
     /**
      * Get menu for a specific week start date.
-     * 
-     * @param string $weekStart
-     * @return Meal|null
      */
     public function getWeekMenu(string $weekStart): ?Meal
     {
@@ -45,15 +40,12 @@ class MealService
 
     /**
      * Create a new weekly menu record.
-     * 
-     * @param array $data
-     * @return Meal
      */
     public function createWeekMenu(array $data): Meal
     {
         // Enforce week start to be Monday
         $data['week_start'] = Carbon::parse($data['week_start'])->startOfWeek()->format('Y-m-d');
-        
+
         // Add current user
         if (auth()->check()) {
             $data['created_by'] = auth()->id();
@@ -64,12 +56,11 @@ class MealService
 
     /**
      * Get the menu for the current week.
-     * 
-     * @return Meal|null
      */
     public function getCurrentWeekMenu(): ?Meal
     {
         $startOfWeek = Carbon::now()->startOfWeek()->format('Y-m-d');
+
         return $this->mealRepository->getCurrentWeekMenu($startOfWeek);
     }
 }

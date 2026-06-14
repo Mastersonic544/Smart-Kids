@@ -12,8 +12,6 @@ class TeacherRepository implements TeacherRepositoryInterface
 {
     /**
      * Get all teachers.
-     *
-     * @return Collection
      */
     public function getAll(): Collection
     {
@@ -22,9 +20,6 @@ class TeacherRepository implements TeacherRepositoryInterface
 
     /**
      * Find a teacher by ID.
-     *
-     * @param int $id
-     * @return Teacher|null
      */
     public function findById(int $id): ?Teacher
     {
@@ -33,9 +28,6 @@ class TeacherRepository implements TeacherRepositoryInterface
 
     /**
      * Create a new teacher.
-     *
-     * @param array $data
-     * @return Teacher
      */
     public function create(array $data): Teacher
     {
@@ -44,26 +36,21 @@ class TeacherRepository implements TeacherRepositoryInterface
 
     /**
      * Update an existing teacher.
-     *
-     * @param int $id
-     * @param array $data
-     * @return Teacher|null
      */
     public function update(int $id, array $data): ?Teacher
     {
         $teacher = Teacher::find($id);
         if ($teacher) {
             $teacher->update($data);
+
             return $teacher;
         }
+
         return null;
     }
 
     /**
      * Delete a teacher by ID.
-     *
-     * @param int $id
-     * @return bool
      */
     public function delete(int $id): bool
     {
@@ -71,15 +58,12 @@ class TeacherRepository implements TeacherRepositoryInterface
         if ($teacher) {
             return $teacher->delete();
         }
+
         return false;
     }
 
     /**
      * Assign teacher to a classroom.
-     *
-     * @param int $teacherId
-     * @param int $classroomId
-     * @return Teacher|null
      */
     public function assignClassroom(int $teacherId, int $classroomId): ?Teacher
     {
@@ -88,8 +72,10 @@ class TeacherRepository implements TeacherRepositoryInterface
             // Depending on architecture, a teacher might have classroom_id on teachers table
             $teacher->classroom_id = $classroomId;
             $teacher->save();
+
             return $teacher;
         }
+
         return null;
     }
 }

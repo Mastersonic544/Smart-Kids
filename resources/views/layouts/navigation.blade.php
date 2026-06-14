@@ -17,6 +17,12 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden sm:flex sm:items-center sm:space-x-1">
+                    {{-- Role: SuperAdmin --}}
+                    @role('superadmin')
+                        <x-nav-link :href="route('superadmin.dashboard')" :active="request()->routeIs('superadmin.dashboard')">Dashboard SaaS</x-nav-link>
+                        <x-nav-link :href="route('superadmin.admins.index')" :active="request()->routeIs('superadmin.admins.*')">Kindergartens</x-nav-link>
+                    @endrole
+
                     {{-- Role: Admin --}}
                     @role('admin')
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
@@ -35,8 +41,20 @@
                         <x-nav-link :href="route('admin.activities.index')" :active="request()->routeIs('admin.activities.*')">
                             Activités
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.classrooms.index')" :active="request()->routeIs('admin.classrooms.*')">
+                            Classes
+                        </x-nav-link>
                         <x-nav-link :href="route('admin.meals.index')" :active="request()->routeIs('admin.meals.*')">
                             Repas
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.payments.index')" :active="request()->routeIs('admin.payments.*')">
+                            Paiements
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.erp.index')" :active="request()->routeIs('admin.erp.*')">
+                            ERP
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.subscription.show')" :active="request()->routeIs('admin.subscription.*')">
+                            Abonnement
                         </x-nav-link>
                     @endrole
 
@@ -134,13 +152,21 @@
     <!-- Responsive Navigation Menu (Mobile) -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden border-t border-slate-200 dark:border-slate-700">
         <div class="pt-2 pb-3 space-y-1 px-4">
+            @role('superadmin')
+                <x-responsive-nav-link :href="route('superadmin.dashboard')" :active="request()->routeIs('superadmin.dashboard')">Dashboard SaaS</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('superadmin.admins.index')" :active="request()->routeIs('superadmin.admins.*')">Kindergartens</x-responsive-nav-link>
+            @endrole
             @role('admin')
                 <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">Tableau de bord</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.children.index')" :active="request()->routeIs('admin.children.*')">Enfants</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.parents.index')" :active="request()->routeIs('admin.parents.*')">Parents</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.teachers.index')" :active="request()->routeIs('admin.teachers.*')">Enseignants</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.activities.index')" :active="request()->routeIs('admin.activities.*')">Activités</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.classrooms.index')" :active="request()->routeIs('admin.classrooms.*')">Classes</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.meals.index')" :active="request()->routeIs('admin.meals.*')">Repas</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.payments.index')" :active="request()->routeIs('admin.payments.*')">Paiements</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.erp.index')" :active="request()->routeIs('admin.erp.*')">ERP</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.subscription.show')" :active="request()->routeIs('admin.subscription.*')">Abonnement</x-responsive-nav-link>
             @endrole
             @role('educateur')
                 <x-responsive-nav-link :href="route('educateur.dashboard')" :active="request()->routeIs('educateur.dashboard')">Tableau de bord</x-responsive-nav-link>

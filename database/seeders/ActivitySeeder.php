@@ -14,8 +14,6 @@ class ActivitySeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run(): void
     {
@@ -28,7 +26,7 @@ class ActivitySeeder extends Seeder
 
         // Create 10 activities
         $activities = Activity::factory()->count(10)->create([
-            'educator_id' => fn() => $teachers->random()->id,
+            'educator_id' => fn () => $teachers->random()->id,
         ]);
 
         // Assign random children to each activity

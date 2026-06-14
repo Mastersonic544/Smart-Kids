@@ -3,8 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
@@ -15,13 +13,14 @@ class PaymentOverdueNotification extends Notification
     use Queueable;
 
     protected $amount;
+
     protected $due_date;
 
     /**
      * Create a new notification instance.
      *
-     * @param float $amount
-     * @param string $due_date
+     * @param  float  $amount
+     * @param  string  $due_date
      * @return void
      */
     public function __construct($amount, $due_date)

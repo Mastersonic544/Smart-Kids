@@ -26,8 +26,6 @@ class Message extends Model
 
     /**
      * Get the user who sent the message.
-     *
-     * @return BelongsTo
      */
     public function sender(): BelongsTo
     {
@@ -36,8 +34,6 @@ class Message extends Model
 
     /**
      * Get the user who receives the message.
-     *
-     * @return BelongsTo
      */
     public function receiver(): BelongsTo
     {

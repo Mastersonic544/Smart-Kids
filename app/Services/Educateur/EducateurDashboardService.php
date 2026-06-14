@@ -3,7 +3,6 @@
 namespace App\Services\Educateur;
 
 use App\Models\Attendance;
-use App\Models\Child;
 use App\Models\Classroom;
 use App\Models\User;
 use Carbon\Carbon;
@@ -15,9 +14,6 @@ class EducateurDashboardService
 {
     /**
      * Get dashboard data for an educator user.
-     *
-     * @param User $user
-     * @return array
      */
     public function getDashboardData(User $user): array
     {
@@ -59,9 +55,6 @@ class EducateurDashboardService
 
     /**
      * Get students in the educator's assigned classroom.
-     *
-     * @param User $user
-     * @return array
      */
     public function getClassStudents(User $user): array
     {
@@ -77,10 +70,6 @@ class EducateurDashboardService
 
     /**
      * Get attendance records for a specific date.
-     *
-     * @param User $user
-     * @param string $date
-     * @return array
      */
     public function getAttendanceForDate(User $user, string $date): array
     {
@@ -107,10 +96,6 @@ class EducateurDashboardService
 
     /**
      * Save attendance records for a day.
-     *
-     * @param string $date
-     * @param array $attendanceData
-     * @return void
      */
     public function saveAttendance(string $date, array $attendanceData): void
     {
@@ -130,9 +115,6 @@ class EducateurDashboardService
 
     /**
      * Get activities managed by this educator.
-     *
-     * @param User $user
-     * @return array
      */
     public function getEducatorActivities(User $user): array
     {

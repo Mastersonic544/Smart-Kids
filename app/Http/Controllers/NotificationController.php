@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -13,19 +14,19 @@ class NotificationController extends Controller
     /**
      * Mark a single notification as read.
      *
-     * @param string $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function markAsRead(string $id)
     {
         Auth::user()->unreadNotifications->where('id', $id)->markAsRead();
+
         return response()->json(['success' => true]);
     }
 
     /**
      * Mark all notifications as read.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function markAllAsRead()
     {

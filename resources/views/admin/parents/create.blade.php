@@ -43,16 +43,8 @@
                                    class="mt-1 flex-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600">
                         </div>
 
-                        <div class="mb-4">
-                            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Mot de passe *</label>
-                            <input type="password" name="password" id="password" required
-                                   class="mt-1 flex-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600">
-                        </div>
-
-                        <div class="mb-6">
-                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirmer le mot de passe *</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation" required
-                                   class="mt-1 flex-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600">
+                        <div class="mb-6 rounded-lg bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 px-4 py-3 text-sm text-teal-800 dark:text-teal-200">
+                            Aucun mot de passe à choisir : un <strong>code à 6 chiffres</strong> sera généré automatiquement et affiché ici. Communiquez-le au parent pour qu'il puisse accéder à son espace via <code>/login/code</code>.
                         </div>
 
                         <div class="flex justify-end gap-4">

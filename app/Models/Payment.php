@@ -30,8 +30,6 @@ class Payment extends Model
 
     /**
      * Get the child this payment belongs to.
-     *
-     * @return BelongsTo
      */
     public function child(): BelongsTo
     {

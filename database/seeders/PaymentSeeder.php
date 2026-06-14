@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Payment;
 use App\Models\Child;
+use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -14,8 +14,6 @@ class PaymentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run(): void
     {

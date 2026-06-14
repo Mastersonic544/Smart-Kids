@@ -15,8 +15,6 @@ class AttendanceSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run(): void
     {
@@ -40,10 +38,10 @@ class AttendanceSeeder extends Seeder
                     $motif = null;
                 } elseif ($chance <= 95) {
                     $statut = 'absent';
-                    $motif = 'Maladie' . (rand(0, 1) ? ' (Grippe)' : '');
+                    $motif = 'Maladie'.(rand(0, 1) ? ' (Grippe)' : '');
                 } else {
                     $statut = 'en_retard';
-                    $motif = 'Transport' . (rand(0, 1) ? ' (Embouteillage)' : '');
+                    $motif = 'Transport'.(rand(0, 1) ? ' (Embouteillage)' : '');
                 }
 
                 Attendance::create([

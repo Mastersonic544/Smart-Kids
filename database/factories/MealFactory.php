@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Meal>
+ * @extends Factory<Meal>
  */
 class MealFactory extends Factory
 {
@@ -24,7 +24,7 @@ class MealFactory extends Factory
             'Couscous aux légumes', 'Pâtes à la sauce bolognaise', 'Riz cantonais',
             'Gratin de pâtes', 'Purée de pommes de terre et poisson',
             'Soupe de lentilles (Chorba)', 'Ojja aux œufs', 'Escalope de poulet grillée',
-            'Salade tunisienne', 'Fruits de saison', 'Yaourt nature'
+            'Salade tunisienne', 'Fruits de saison', 'Yaourt nature',
         ];
 
         return [

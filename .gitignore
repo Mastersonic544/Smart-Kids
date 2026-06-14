@@ -6,6 +6,9 @@
 /storage/*.key
 /storage/pail
 /vendor
+/database/database.sqlite
+/database/*.sqlite
+/database/*.sqlite-journal
 .env
 .env.backup
 .env.production

@@ -12,8 +12,6 @@ class DashboardController extends Controller
 
     /**
      * Inject DashboardService.
-     *
-     * @param DashboardService $dashboardService
      */
     public function __construct(DashboardService $dashboardService)
     {
@@ -22,8 +20,6 @@ class DashboardController extends Controller
 
     /**
      * Display the admin dashboard.
-     *
-     * @return View
      */
     public function index(): View
     {

@@ -23,8 +23,8 @@ class MealRepository implements MealRepositoryInterface
     public function getCurrentWeekMenu(string $currentWeekStart): ?Meal
     {
         return Meal::where('week_start', '<=', $currentWeekStart)
-                   ->orderBy('week_start', 'desc')
-                   ->first();
+            ->orderBy('week_start', 'desc')
+            ->first();
     }
 
     public function create(array $data): Meal

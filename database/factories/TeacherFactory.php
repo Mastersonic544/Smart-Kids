@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Teacher>
+ * @extends Factory<Teacher>
  */
 class TeacherFactory extends Factory
 {
@@ -30,7 +30,7 @@ class TeacherFactory extends Factory
             'user_id' => User::factory(),
             'nom' => $nom,
             'prenom' => $prenom,
-            'email' => strtolower($prenom . '.' . str_replace(' ', '', $nom) . '@smartkids.tn'),
+            'email' => strtolower($prenom.'.'.str_replace(' ', '', $nom).'@smartkids.tn'),
             'telephone' => $this->faker->regexify('[259][0-9]{7}'), // Tunisian phone style
             'document_contractuel' => null,
         ];

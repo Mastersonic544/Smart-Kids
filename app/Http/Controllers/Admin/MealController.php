@@ -20,6 +20,7 @@ class MealController extends Controller
     public function index(): View
     {
         $meals = $this->mealService->getAllMeals();
+
         return view('admin.meals.index', compact('meals'));
     }
 
@@ -31,14 +32,17 @@ class MealController extends Controller
     public function store(StoreMealRequest $request): RedirectResponse
     {
         $this->mealService->createWeekMenu($request->validated());
+
         return redirect()->route('admin.meals.index')->with('success', 'Menu de la semaine créé avec succès.');
     }
 
     public function show(string $weekStart): View
     {
         $meal = $this->mealService->getWeekMenu($weekStart);
-        if (!$meal) abort(404);
-        
+        if (! $meal) {
+            abort(404);
+        }
+
         return view('admin.meals.show', compact('meal'));
     }
 }

@@ -3,9 +3,12 @@
 namespace App\Services\Parent;
 
 use App\Models\Child;
+use App\Models\Meal;
 use App\Models\Payment;
+use App\Models\Teacher;
 use App\Services\Meals\MealService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Service to handle logic for the Parent Portal.
@@ -22,8 +25,7 @@ class ParentDashboardService
     /**
      * Get children for a parent user.
      *
-     * @param int $parentId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function getChildData(int $parentId)
     {
@@ -33,15 +35,17 @@ class ParentDashboardService
     /**
      * Get attendance count for a child this month.
      *
-     * @param int $childId
      * @return int
      */
     public function getAttendanceSummary(int $childId)
     {
         $child = Child::find($childId);
-        if (!$child) return 0;
+        if (! $child) {
+            return 0;
+        }
 
         $startOfMonth = Carbon::now()->startOfMonth();
+
         return $child->attendances()
             ->where('date', '>=', $startOfMonth)
             ->where('statut', 'present')
@@ -51,8 +55,7 @@ class ParentDashboardService
     /**
      * Get payment history for a child.
      *
-     * @param int $childId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function getPaymentHistory(int $childId)
     {
@@ -64,7 +67,6 @@ class ParentDashboardService
     /**
      * Get next pending payment for a child.
      *
-     * @param int $childId
      * @return Payment|null
      */
     public function getNextPaymentDue(int $childId)
@@ -78,7 +80,7 @@ class ParentDashboardService
     /**
      * Get the menu for the current week.
      *
-     * @return \App\Models\Meal|null
+     * @return Meal|null
      */
     public function getCurrentMenu()
     {
@@ -87,9 +89,6 @@ class ParentDashboardService
 
     /**
      * Aggregate dashboard data for all children of a parent.
-     *
-     * @param int $parentId
-     * @return array
      */
     public function getDashboardSummary(int $parentId): array
     {
@@ -100,7 +99,7 @@ class ParentDashboardService
             $summary[] = [
                 'child' => $child,
                 'attendance_count' => $this->getAttendanceSummary($child->id),
-                'next_payment' => $this->getNextPaymentDue($child->id)
+                'next_payment' => $this->getNextPaymentDue($child->id),
             ];
         }
 
@@ -110,13 +109,14 @@ class ParentDashboardService
     /**
      * Get activities for a child.
      *
-     * @param int $childId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function getChildActivities(int $childId)
     {
         $child = Child::find($childId);
-        if (!$child) return collect();
+        if (! $child) {
+            return collect();
+        }
 
         return $child->activities()
             ->with('educator')
@@ -127,20 +127,19 @@ class ParentDashboardService
     /**
      * Get the teacher for a child's classroom.
      *
-     * @param Child $child
-     * @return \App\Models\Teacher|null
+     * @return Teacher|null
      */
     public function getChildTeacher(Child $child)
     {
-        if (!$child->classroom) return null;
+        if (! $child->classroom) {
+            return null;
+        }
+
         return $child->classroom->teacher;
     }
 
     /**
      * Process a simulated payment (mark as paid).
-     *
-     * @param Payment $payment
-     * @return Payment
      */
     public function processPayment(Payment $payment): Payment
     {

@@ -3,8 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
@@ -15,13 +13,14 @@ class AbsenceRecordedNotification extends Notification
     use Queueable;
 
     protected $child_name;
+
     protected $date;
 
     /**
      * Create a new notification instance.
      *
-     * @param string $child_name
-     * @param string $date
+     * @param  string  $child_name
+     * @param  string  $date
      * @return void
      */
     public function __construct($child_name, $date)

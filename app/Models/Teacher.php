@@ -26,8 +26,6 @@ class Teacher extends Model
 
     /**
      * Get the user account associated with this teacher.
-     *
-     * @return BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -36,8 +34,6 @@ class Teacher extends Model
 
     /**
      * Get the activities this teacher is responsible for.
-     *
-     * @return HasMany
      */
     public function activities(): HasMany
     {
@@ -46,8 +42,6 @@ class Teacher extends Model
 
     /**
      * Get the classroom this teacher is assigned to.
-     *
-     * @return HasOne
      */
     public function classroom(): HasOne
     {
@@ -56,8 +50,6 @@ class Teacher extends Model
 
     /**
      * Get the teacher's full name.
-     *
-     * @return string
      */
     public function getFullNameAttribute(): string
     {

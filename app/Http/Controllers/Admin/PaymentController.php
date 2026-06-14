@@ -2,37 +2,53 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Concerns\ScopesToTenant;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Payments\UpdatePaymentRequest;
 use App\Models\Payment;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
-/**
- * Controller for managing Payments from Admin portal.
- */
 class PaymentController extends Controller
 {
-    public function index()
+    use ScopesToTenant;
+
+    public function index(): View
     {
-        $payments = Payment::with('child')->orderBy('created_at', 'desc')->paginate(20);
+        $tenantId = $this->currentTenantAdminId();
+
+        $payments = Payment::query()
+            ->with('child.parent')
+            ->when($tenantId, fn ($q) => $q->whereHas('child.parent', fn ($p) => $p->where('tenant_admin_id', $tenantId)))
+            ->orderByDesc('created_at')
+            ->paginate(20);
+
         return view('admin.payments.index', compact('payments'));
     }
 
-    public function edit(Payment $payment)
+    public function edit(Payment $payment): View
     {
+        $this->ensurePaymentInTenant($payment);
+
         return view('admin.payments.edit', compact('payment'));
     }
 
-    public function update(Request $request, Payment $payment)
+    public function update(UpdatePaymentRequest $request, Payment $payment): RedirectResponse
     {
-        $validated = $request->validate([
-            'statut' => 'required|in:en attente,payé',
-        ]);
+        $this->ensurePaymentInTenant($payment);
+        $data = $request->validated();
 
-        if ($validated['statut'] === 'payé' && $payment->statut !== 'payé') {
-            $validated['paye_le'] = now();
+        if ($data['statut'] === 'payé' && $payment->statut !== 'payé') {
+            $data['paye_le'] = now();
         }
 
-        $payment->update($validated);
+        $payment->update($data);
+
         return redirect()->route('admin.payments.index')->with('success', 'Paiement mis à jour.');
+    }
+
+    private function ensurePaymentInTenant(Payment $payment): void
+    {
+        $this->ensureInTenant($payment, fn (Payment $p) => $p->child?->parent_id);
     }
 }

@@ -42,8 +42,10 @@ class ActivityRepository implements ActivityRepositoryInterface
         $activity = Activity::find($id);
         if ($activity) {
             $activity->update($data);
+
             return $activity;
         }
+
         return null;
     }
 
@@ -56,6 +58,7 @@ class ActivityRepository implements ActivityRepositoryInterface
         if ($activity) {
             return $activity->delete();
         }
+
         return false;
     }
 
@@ -80,12 +83,12 @@ class ActivityRepository implements ActivityRepositoryInterface
         if ($activity) {
             // Unmark all children for this activity
             $activity->children()->updateExistingPivot(
-                $activity->children()->pluck('children.id')->toArray(), 
+                $activity->children()->pluck('children.id')->toArray(),
                 ['attended' => false]
             );
 
             // Mark specified children as attended
-            if (!empty($childIds)) {
+            if (! empty($childIds)) {
                 $activity->children()->updateExistingPivot($childIds, ['attended' => true]);
             }
         }

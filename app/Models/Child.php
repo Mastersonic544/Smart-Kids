@@ -30,8 +30,6 @@ class Child extends Model
 
     /**
      * Get the parent user who owns this child.
-     *
-     * @return BelongsTo
      */
     public function parent(): BelongsTo
     {
@@ -40,8 +38,6 @@ class Child extends Model
 
     /**
      * Get the classroom this child belongs to.
-     *
-     * @return BelongsTo
      */
     public function classroom(): BelongsTo
     {
@@ -50,8 +46,6 @@ class Child extends Model
 
     /**
      * Get the activities this child is enrolled in.
-     *
-     * @return BelongsToMany
      */
     public function activities(): BelongsToMany
     {
@@ -60,8 +54,6 @@ class Child extends Model
 
     /**
      * Get the attendances for this child.
-     *
-     * @return HasMany
      */
     public function attendances(): HasMany
     {
@@ -70,8 +62,6 @@ class Child extends Model
 
     /**
      * Get the payments made for this child.
-     *
-     * @return HasMany
      */
     public function payments(): HasMany
     {
@@ -80,8 +70,6 @@ class Child extends Model
 
     /**
      * Get the child's full name.
-     *
-     * @return string
      */
     public function getFullNameAttribute(): string
     {

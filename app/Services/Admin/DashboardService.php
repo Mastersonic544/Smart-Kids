@@ -4,9 +4,9 @@ namespace App\Services\Admin;
 
 use App\Models\Child;
 use App\Models\Classroom;
-use App\Models\Teacher;
 use App\Models\Enrollment;
 use App\Models\Payment;
+use App\Models\Teacher;
 
 /**
  * Service handling dashboard statistics and aggregations.

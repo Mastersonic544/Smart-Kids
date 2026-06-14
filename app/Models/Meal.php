@@ -34,8 +34,6 @@ class Meal extends Model
 
     /**
      * Get the user who created the meal plan.
-     *
-     * @return BelongsTo
      */
     public function creator(): BelongsTo
     {

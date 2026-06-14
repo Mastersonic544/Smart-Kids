@@ -13,14 +13,12 @@ class MealSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run(): void
     {
         $admin = User::role('admin')->first();
 
-        if (!$admin) {
+        if (! $admin) {
             return;
         }
 
