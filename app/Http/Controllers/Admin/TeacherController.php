@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Concerns\ScopesToTenant;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Teachers\StoreTeacherRequest;
 use App\Http\Requests\Teachers\UpdateTeacherRequest;
@@ -13,6 +14,8 @@ use Illuminate\View\View;
 
 class TeacherController extends Controller
 {
+    use ScopesToTenant;
+
     protected TeacherService $teacherService;
 
     public function __construct(TeacherService $teacherService)
@@ -22,7 +25,12 @@ class TeacherController extends Controller
 
     public function index(): View
     {
-        $teachers = $this->teacherService->getAllTeachers();
+        $tenantId = $this->currentTenantAdminId();
+
+        $teachers = Teacher::query()
+            ->with(['user', 'classroom'])
+            ->when($tenantId, fn ($q) => $q->whereHas('user', fn ($u) => $u->where('tenant_admin_id', $tenantId)))
+            ->get();
 
         return view('admin.teachers.index', compact('teachers'));
     }
@@ -48,26 +56,25 @@ class TeacherController extends Controller
 
     public function show(int $id): View
     {
-        $teacher = $this->teacherService->getTeacherById($id);
-        if (! $teacher) {
-            abort(404);
-        }
+        $teacher = Teacher::with(['user', 'classroom', 'activities'])->findOrFail($id);
+        $this->ensureTeacherInTenant($teacher);
 
         return view('admin.teachers.show', compact('teacher'));
     }
 
     public function edit(int $id): View
     {
-        $teacher = $this->teacherService->getTeacherById($id);
-        if (! $teacher) {
-            abort(404);
-        }
+        $teacher = Teacher::with('user')->findOrFail($id);
+        $this->ensureTeacherInTenant($teacher);
 
         return view('admin.teachers.edit', compact('teacher'));
     }
 
     public function update(UpdateTeacherRequest $request, int $id): RedirectResponse
     {
+        $teacher = Teacher::with('user')->findOrFail($id);
+        $this->ensureTeacherInTenant($teacher);
+
         $this->teacherService->updateTeacher($id, $request->validated());
 
         return redirect()->route('admin.teachers.index')->with('success', 'Enseignant mis à jour avec succès.');
@@ -75,6 +82,9 @@ class TeacherController extends Controller
 
     public function destroy(int $id): RedirectResponse
     {
+        $teacher = Teacher::with('user')->findOrFail($id);
+        $this->ensureTeacherInTenant($teacher);
+
         $this->teacherService->deleteTeacher($id);
 
         return redirect()->route('admin.teachers.index')->with('success', 'Enseignant supprimé avec succès.');
@@ -82,6 +92,7 @@ class TeacherController extends Controller
 
     public function regeneratePasscode(Teacher $teacher): RedirectResponse
     {
+        $this->ensureTeacherInTenant($teacher);
         $passcode = $this->teacherService->regeneratePasscode($teacher);
 
         return redirect()
@@ -92,5 +103,10 @@ class TeacherController extends Controller
                 'email' => $teacher->user->email,
                 'passcode' => $passcode,
             ]);
+    }
+
+    private function ensureTeacherInTenant(Teacher $teacher): void
+    {
+        $this->ensureInTenant($teacher, fn (Teacher $t) => $t->user_id);
     }
 }

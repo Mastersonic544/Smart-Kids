@@ -54,12 +54,10 @@
                                 </a>
                             @else
                                 <div class="flex items-center space-x-4">
-                                    <a href="{{ route('login') }}" class="text-slate-700 font-semibold hover:text-teal-600 transition-colors">Connexion</a>
-                                    @if (Route::has('register'))
-                                        <a href="{{ route('register') }}" class="px-6 py-2.5 bg-slate-900 text-white rounded-full font-semibold shadow-xl hover:bg-slate-800 transition-all transform hover:-translate-y-0.5">
-                                            Inscription
-                                        </a>
-                                    @endif
+                                    <a href="{{ route('passcode.show') }}" class="text-slate-700 font-semibold hover:text-teal-600 transition-colors">Espace Parent/Éducateur</a>
+                                    <a href="{{ route('login') }}" class="px-6 py-2.5 bg-slate-900 text-white rounded-full font-semibold shadow-xl hover:bg-slate-800 transition-all transform hover:-translate-y-0.5">
+                                        Connexion Admin
+                                    </a>
                                 </div>
                             @endauth
                         @endif
@@ -87,11 +85,9 @@
                         @auth
                             <a href="{{ url('/dashboard') }}" class="block px-3 py-3 text-center rounded-xl text-base font-bold text-white bg-teal-600 hover:bg-teal-700 transition-colors">Tableau de bord</a>
                         @else
-                            <div class="grid grid-cols-2 gap-3">
-                                <a href="{{ route('login') }}" class="block px-3 py-3 text-center rounded-xl text-base font-bold text-slate-700 border border-slate-200 hover:bg-slate-50 transition-colors">Connexion</a>
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="block px-3 py-3 text-center rounded-xl text-base font-bold text-white bg-slate-900 hover:bg-slate-800 transition-colors">Inscription</a>
-                                @endif
+                            <div class="grid grid-cols-1 gap-2">
+                                <a href="{{ route('passcode.show') }}" class="block px-3 py-3 text-center rounded-xl text-base font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 transition-colors">Parent / Éducateur — Code à 6 chiffres</a>
+                                <a href="{{ route('login') }}" class="block px-3 py-3 text-center rounded-xl text-base font-bold text-white bg-slate-900 hover:bg-slate-800 transition-colors">Admin — Email / Mot de passe</a>
                             </div>
                         @endauth
                     @endif
@@ -107,17 +103,17 @@
                         <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-teal-50 text-teal-700 border border-teal-100">
                             ✨ Plateforme de Gestion Scolaire Nouvelle Génération
                         </span>
-                        <h1 class="text-5xl lg:text-7xl font-bold leading-tight text-slate-900">
+                        <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight text-slate-900">
                             Offrez le meilleur à <span class="gradient-text">vos enfants</span>.
                         </h1>
-                        <p class="text-lg lg:text-xl text-slate-600 leading-relaxed max-w-xl">
+                        <p class="text-base sm:text-lg lg:text-xl text-slate-600 leading-relaxed max-w-xl">
                             Simplifiez la gestion de votre jardin d'enfants avec notre solution complète : inscriptions, nutrition, activités et communication en temps réel avec les parents.
                         </p>
-                        <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                            <a href="{{ route('register') }}" class="px-8 py-4 bg-teal-600 text-white rounded-2xl font-bold text-lg shadow-xl shadow-teal-200 hover:bg-teal-700 transition-all transform hover:-translate-y-1 text-center">
-                                Commencer Gratuitement
+                        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
+                            <a href="{{ route('passcode.show') }}" class="px-6 sm:px-8 py-3 sm:py-4 bg-teal-600 text-white rounded-2xl font-bold text-base sm:text-lg shadow-xl shadow-teal-200 hover:bg-teal-700 transition-all transform hover:-translate-y-1 text-center">
+                                J'ai un code à 6 chiffres
                             </a>
-                            <a href="#features" class="px-8 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold text-lg shadow-sm hover:bg-slate-50 transition-all text-center">
+                            <a href="#features" class="px-6 sm:px-8 py-3 sm:py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold text-base sm:text-lg shadow-sm hover:bg-slate-50 transition-all text-center">
                                 Découvrir les modules
                             </a>
                         </div>

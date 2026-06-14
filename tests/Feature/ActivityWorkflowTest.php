@@ -68,11 +68,15 @@ class ActivityWorkflowTest extends TestCase
 
         $child = Child::factory()->create(['parent_id' => $parent->id]);
 
+        $eduUser = User::factory()->create(['tenant_admin_id' => $admin->id]);
+        $eduUser->assignRole('educateur');
+        $teacher = Teacher::factory()->create(['user_id' => $eduUser->id]);
+
         $activity = Activity::create([
             'name' => 'Atelier peinture',
             'scheduled_date' => now()->addDays(3),
             'scheduled_time' => '14:00',
-            'educator_id' => Teacher::factory()->create()->id,
+            'educator_id' => $teacher->id,
             'status' => ActivityStatus::PendingApproval->value,
             'max_participants' => 20,
         ]);
@@ -98,12 +102,13 @@ class ActivityWorkflowTest extends TestCase
 
         $educator = User::factory()->create(['tenant_admin_id' => $admin->id]);
         $educator->assignRole('educateur');
+        $teacher = Teacher::factory()->create(['user_id' => $educator->id]);
 
         $activity = Activity::create([
             'name' => 'Sortie risquée',
             'scheduled_date' => now()->addDays(5),
             'scheduled_time' => '09:00',
-            'educator_id' => Teacher::factory()->create()->id,
+            'educator_id' => $teacher->id,
             'requested_by' => $educator->id,
             'status' => ActivityStatus::PendingApproval->value,
             'max_participants' => 20,
