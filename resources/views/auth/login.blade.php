@@ -1,4 +1,9 @@
 <x-guest-layout>
+    <div class="mb-4 text-center space-y-1">
+        <h1 class="text-2xl font-bold text-slate-800 dark:text-white">Espace Administration</h1>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Réservé aux administrateurs d'établissement.</p>
+    </div>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -44,4 +49,11 @@
             </x-primary-button>
         </div>
     </form>
+
+    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 text-center text-sm">
+        <p class="text-slate-500 dark:text-slate-400">Parent ou éducateur ?</p>
+        <a href="{{ route('passcode.show') }}" class="inline-block mt-1 px-4 py-2 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 font-semibold hover:bg-teal-100 dark:hover:bg-teal-900/50 transition-colors">
+            Entrer mon code à 6 chiffres →
+        </a>
+    </div>
 </x-guest-layout>

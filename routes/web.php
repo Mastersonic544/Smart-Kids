@@ -68,7 +68,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('parents', ParentController::class)->except(['show']);
     Route::post('parents/{parent}/regenerate-passcode', [ParentController::class, 'regeneratePasscode'])
         ->name('parents.regeneratePasscode');
-    Route::resource('teachers', TeacherController::class)->except(['show']);
+    Route::resource('teachers', TeacherController::class);
     Route::post('teachers/{teacher}/regenerate-passcode', [TeacherController::class, 'regeneratePasscode'])
         ->name('teachers.regeneratePasscode');
     Route::resource('activities', ActivityController::class);

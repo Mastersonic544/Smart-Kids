@@ -41,8 +41,14 @@
                         <x-nav-link :href="route('admin.activities.index')" :active="request()->routeIs('admin.activities.*')">
                             Activités
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.classrooms.index')" :active="request()->routeIs('admin.classrooms.*')">
+                            Classes
+                        </x-nav-link>
                         <x-nav-link :href="route('admin.meals.index')" :active="request()->routeIs('admin.meals.*')">
                             Repas
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.payments.index')" :active="request()->routeIs('admin.payments.*')">
+                            Paiements
                         </x-nav-link>
                         <x-nav-link :href="route('admin.erp.index')" :active="request()->routeIs('admin.erp.*')">
                             ERP
@@ -156,7 +162,9 @@
                 <x-responsive-nav-link :href="route('admin.parents.index')" :active="request()->routeIs('admin.parents.*')">Parents</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.teachers.index')" :active="request()->routeIs('admin.teachers.*')">Enseignants</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.activities.index')" :active="request()->routeIs('admin.activities.*')">Activités</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.classrooms.index')" :active="request()->routeIs('admin.classrooms.*')">Classes</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.meals.index')" :active="request()->routeIs('admin.meals.*')">Repas</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.payments.index')" :active="request()->routeIs('admin.payments.*')">Paiements</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.erp.index')" :active="request()->routeIs('admin.erp.*')">ERP</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.subscription.show')" :active="request()->routeIs('admin.subscription.*')">Abonnement</x-responsive-nav-link>
             @endrole
