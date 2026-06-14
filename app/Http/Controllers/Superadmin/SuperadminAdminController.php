@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -82,5 +83,27 @@ class SuperadminAdminController extends Controller
         $admin->delete();
 
         return redirect()->route('superadmin.admins.index')->with('success', 'Administrateur supprimé.');
+    }
+
+    /**
+     * Reveal the 6-digit passcodes for every parent and educator under a given
+     * kindergarten admin. Used by the SaaS support team to recover credentials
+     * when a parent/educator loses their code.
+     */
+    public function codes(User $admin): View
+    {
+        abort_unless($admin->hasRole('admin'), 422, 'Cet utilisateur n\'est pas un administrateur.');
+
+        $parents = User::role('parent')
+            ->where('tenant_admin_id', $admin->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'email', 'phone', 'passcode']);
+
+        $educators = User::role('educateur')
+            ->where('tenant_admin_id', $admin->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'email', 'phone', 'passcode']);
+
+        return view('superadmin.admins.codes', compact('admin', 'parents', 'educators'));
     }
 }

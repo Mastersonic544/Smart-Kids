@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
 // ===== SUPERADMIN ROUTES =====
 Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', [SuperadminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/admins/{admin}/codes', [SuperadminAdminController::class, 'codes'])->name('admins.codes');
     Route::resource('admins', SuperadminAdminController::class)->only(['index', 'create', 'store', 'destroy']);
 });
 
