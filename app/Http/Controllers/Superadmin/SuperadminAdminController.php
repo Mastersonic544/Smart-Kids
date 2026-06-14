@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Superadmin;
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Support\PasscodeGenerator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -56,6 +57,7 @@ class SuperadminAdminController extends Controller
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
             'password' => Hash::make($tempPassword),
+            'passcode' => PasscodeGenerator::generate(),
             'monthly_tuition_tnd' => $data['monthly_tuition_tnd'] ?? null,
             'subscription_status' => 'active',
             'billing_period' => $data['billing_period'],
@@ -93,6 +95,12 @@ class SuperadminAdminController extends Controller
     public function codes(User $admin): View
     {
         abort_unless($admin->hasRole('admin'), 422, 'Cet utilisateur n\'est pas un administrateur.');
+
+        // Backfill the admin's own 6-digit code if one was never minted
+        // (admins created before this feature existed don't have one yet).
+        if (empty($admin->passcode)) {
+            $admin->forceFill(['passcode' => PasscodeGenerator::generate()])->save();
+        }
 
         $parents = User::role('parent')
             ->where('tenant_admin_id', $admin->id)

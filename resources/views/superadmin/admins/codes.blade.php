@@ -14,9 +14,32 @@
             <div class="rounded-2xl bg-gradient-to-br from-slate-800 to-indigo-900 text-white p-6 shadow-xl">
                 <p class="text-indigo-200 text-sm uppercase tracking-wider font-semibold">⚠️ Données sensibles</p>
                 <p class="text-indigo-50 text-sm mt-2 max-w-2xl">
-                    Cette page liste tous les codes à 6 chiffres parents et éducateurs de cet établissement.
+                    Cette page liste le code de l'administrateur de l'établissement ainsi que tous les codes à 6 chiffres parents et éducateurs.
                     Cliquez sur l'œil pour révéler un code et ne le partagez qu'avec la personne concernée.
                 </p>
+            </div>
+
+            {{-- Administrator (kindergarten owner) --}}
+            <div class="card-premium overflow-hidden">
+                <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="font-bold text-slate-800 dark:text-white">Administrateur de l'établissement</h3>
+                </div>
+                <div class="px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="font-semibold text-slate-800 dark:text-white truncate">{{ $admin->name }}</p>
+                        <p class="text-xs text-slate-500 truncate">{{ $admin->email }}{{ $admin->phone ? ' • '.$admin->phone : '' }}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="font-mono font-bold text-2xl tracking-[0.3em] bg-slate-100 dark:bg-slate-800 rounded-lg px-4 py-2 select-all"
+                             x-text="reveal['admin-{{ $admin->id }}'] ? '{{ $admin->passcode ?? '——————' }}' : '• • • • • •'"></div>
+                        <button type="button" @click="reveal['admin-{{ $admin->id }}'] = !reveal['admin-{{ $admin->id }}']"
+                                class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 transition-colors"
+                                :title="reveal['admin-{{ $admin->id }}'] ? 'Masquer' : 'Révéler'">
+                            <svg x-show="!reveal['admin-{{ $admin->id }}']" class="w-5 h-5 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            <svg x-show="reveal['admin-{{ $admin->id }}']" x-cloak class="w-5 h-5 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {{-- Educators --}}
