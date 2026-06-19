@@ -11,6 +11,17 @@ class StoreClassroomRequest extends FormRequest
         return $this->user()?->hasRole('admin') ?? false;
     }
 
+    /**
+     * An unselected educator dropdown posts '' — Postgres rejects '' for the
+     * bigint educator_id (SQLSTATE 22P02). Coerce blanks to null pre-validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->input('educator_id') === '') {
+            $this->merge(['educator_id' => null]);
+        }
+    }
+
     public function rules(): array
     {
         return [

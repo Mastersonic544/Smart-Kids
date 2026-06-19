@@ -24,7 +24,7 @@
                         <div>
                             <h3 class="text-lg font-semibold mb-2">Scolarité et Contact</h3>
                             <p><strong>Parent:</strong> {{ $child->parent->name ?? 'N/A' }} ({{ $child->parent->email ?? '' }})</p>
-                            <p><strong>Classe:</strong> {{ $child->classroom->name ?? 'Non assigné' }}</p>
+                            <p><strong>Classe:</strong> {{ $child->classroom->nom ?? 'Non assigné' }}</p>
                             <p><strong>Inscrit le:</strong> {{ $child->created_at->format('d/m/Y') }}</p>
                         </div>
                     </div>

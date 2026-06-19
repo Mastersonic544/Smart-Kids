@@ -80,7 +80,7 @@
                                                 <span class="text-slate-400">N/A</span>
                                             @endif
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ $child->classroom->name ?? 'Non assigné' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $child->classroom->nom ?? 'Non assigné' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="{{ route('admin.children.show', $child->id) }}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-2">Voir</a>
                                             <a href="{{ route('admin.children.edit', $child->id) }}" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-2">Modifier</a>

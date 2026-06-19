@@ -16,6 +16,19 @@ class StoreChildRequest extends FormRequest
     }
 
     /**
+     * Normalize optional foreign keys before validation: an unselected dropdown
+     * posts an empty string, and Postgres rejects '' for a bigint column
+     * (SQLSTATE 22P02). Coerce blanks to null so the insert is valid on every
+     * database, without relying on global middleware.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->input('classroom_id') === '') {
+            $this->merge(['classroom_id' => null]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>

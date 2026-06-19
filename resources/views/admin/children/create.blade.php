@@ -62,7 +62,7 @@
                             <select name="classroom_id" id="classroom_id" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-black dark:text-gray-300">
                                 <option value="">-- Aucune classe --</option>
                                 @foreach($classrooms as $classroom)
-                                    <option value="{{ $classroom->id }}" {{ old('classroom_id') == $classroom->id ? 'selected' : '' }}>{{ $classroom->name }}</option>
+                                    <option value="{{ $classroom->id }}" {{ old('classroom_id') == $classroom->id ? 'selected' : '' }}>{{ $classroom->nom }}</option>
                                 @endforeach
                             </select>
                             @error('classroom_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
